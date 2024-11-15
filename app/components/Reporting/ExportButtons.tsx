@@ -7,9 +7,9 @@ interface ExportButtonsProps {
 }
 
 const ExportButtons: React.FC<ExportButtonsProps> = ({ data }) => (
-  <div>
-    <button onClick={() => exportPDF(data)}>Exportar a PDF</button>
-    <button onClick={() => exportCSV(data)}>Exportar a CSV</button>
+  <div className='flex space-x-10 pl-10'>
+    <button className="rounded-lg bg-emerald-200 p-2"onClick={() => exportPDF(data)}>Exportar a PDF</button>
+    <button className="rounded-lg bg-emerald-200 p-2" onClick={() => exportCSV(data)}>Exportar a CSV</button>
   </div>
 );
 
