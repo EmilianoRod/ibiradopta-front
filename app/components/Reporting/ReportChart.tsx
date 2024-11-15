@@ -1,79 +1,49 @@
-"use client";
-import React, { useState } from 'react';
+'use client';
 import Chart from 'react-apexcharts';
+import { ApexOptions } from 'apexcharts';
+
+
 
 interface ReportChartProps {
-  data: ReportData;
+  chartType: 'bar' | 'pie' | 'line';
+  title: string;
+  categories: string[];
+  series: { name?: string; data: number[] }[];
 }
 
-const ReportChart: React.FC<ReportChartProps> = ({ data }) => {
-  const [chartData] = useState({
-    series: [
-      {
-        name: 'Árboles Plantados',
-        data: data.treesPlantedPerMonth,
-      },
-      {
-        name: 'Fondos Recaudados',
-        data: data.fundsRaised,
-      },
-    ],
-    options: {
-      chart: {
-        type: 'bar' as const,
-        height: 350,
-      },
-      title: {
-        text: 'Informe de Conservación de Bosques',
-      },
-      xaxis: {
-        categories: data.months,
+const ReportChart: React.FC<ReportChartProps> = ({ chartType, title, categories, series }) => {
+   // Asegurarse de que los datos no estén vacíos
+   if (!categories || categories.length === 0) {
+    console.error('Categories are empty or undefined');
+    return <div>Error: No categories data.</div>;
+  }
+
+  if (!series || series.length === 0) {
+    console.error('Series are empty or undefined');
+    return <div>Error: No series data.</div>;
+  }
+  
+  const chartOptions: ApexOptions = {
+    chart: {
+      type: chartType,
+      height: 350,
+    },
+    title: {
+      text: title,
+      align: 'center',
+      style: {
+        fontSize: '16px',
+        fontWeight: 'bold',
       },
     },
-  });
+    xaxis: chartType !== 'pie' ? { categories } : undefined, // Solo aplica para gráficos que no sean tipo pie
+    labels: chartType === 'pie' ? categories : undefined,   // Aplica solo para gráficos tipo pie
+  };
 
-  return (
-    <>
-  <Chart options={chartData.options} series={chartData.series} type="bar" height={500} />;
-  <h2>Tendencia de Plantación de Árboles - Gráfico de Líneas</h2>
-  <Chart
-    options={{
-      chart: { type: 'line' },
-      xaxis: { categories: data.months },
-    }}
-    series={[
-      { name: 'Árboles Plantados', data: data.treesPlantedPerMonth },
-    ]}
-    type="line"
-    height={350}
-  />
+  return  <Chart options={chartOptions} series={series} type={chartType} height={350} />;
 
-  <h2>Distribución de Proyectos - Gráfico de Donut</h2>
-  <Chart
-    options={{
-      chart: { type: 'donut' },
-      labels: ['Proyecto A', 'Proyecto B', 'Proyecto C'], // Ajusta según tus proyectos
-    }}
-    series={[30, 40, 30]} // Porcentajes de ejemplo
-    type="donut"
-    height={350}
-  />
 
-  <h2>Comparativa de Fondos - Gráfico de Área</h2>
-  <Chart
-    options={{
-      chart: { type: 'area' },
-      xaxis: { categories: data.months },
-    }}
-    series={[
-      { name: 'Fondos Recaudados', data: data.fundsRaised },
-    ]}
-    type="area"
-    height={350}
-  />
-</>
 
-  )
 };
 
 export default ReportChart;

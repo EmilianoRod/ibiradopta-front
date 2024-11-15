@@ -1,191 +1,234 @@
 "use client";
 import { useState } from "react";
-import ReportFilters from "./ReportFilters";
-import ReportChart from "./ReportChart";
-import ExportButtons from "./ExportButtons";
-import ReportTable from "./ReportTable";    
+// import ReportFilters from "./ReportFilters";
+// import ReportChart from "./ReportChart";
+// import ExportButtons from "./ExportButtons";
+import ReportTable from "./ReportTable";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import Papa from "papaparse";
+import sampleData from "./sampleData.json";
 
-const sampleData = [
-    {
-      id: 1,
-      amount: 100,
-      date: "2024-11-11",
-      user: {
-        id: "54c5a2f9-3979-402a-b927-3124cdd63f99",
-        userName: "jjolo",
-        email: "asdasda@dasda.com"
-      },
-      project: {
-        id: 2,
-        name: "Reforestación de la Cuenca del Río Santa Lucía",
-        description: "Proyecto de reforestación en la cuenca para mejorar la calidad del agua.",
-        imageUrl: "https://semanarioelpueblo.com.uy/wp-content/uploads/2017/06/biologo.jpg",
-        location: "Canelones, Uruguay",
-        endDate: "2024-09-30",
-        isFinished: true
-      }
-    },
-    {
-      id: 2,
-      amount: 200,
-      date: "2024-11-13",
-      user: {
-        id: "12376515-3bea-4b0e-8fd2-4f0b0db24ebe",
-        userName: "lfranco",
-        email: "leonardojfs83@gmail.com"
-      },
-      project: {
-        id: 1,
-        name: "Reforestación del Parque Nacional Quebrada de los Cuervos",
-        description: "Iniciativa para plantar 5,000 árboles nativos en el parque.",
-        imageUrl: "https://7maravillas.uy/wp-content/uploads/2021/01/quebrada-cuervos-foto-uruguay-natural.jpg",
-        location: "Treinta y Tres, Uruguay",
-        endDate: "2025-05-15",
-        isFinished: false
-      }
-    },
-    {
-      id: 3,
-      amount: 100,
-      date: "2024-11-12",
-      user: {
-        id: "75e86d3a-d4fa-43d9-8b96-896cecd118ad",
-        userName: "erers",
-        email: "sadas@asdasd.com"
-      },
-      project: {
-        id: 2,
-        name: "Reforestación de la Cuenca del Río Santa Lucía",
-        description: "Proyecto de reforestación en la cuenca para mejorar la calidad del agua.",
-        imageUrl: "https://semanarioelpueblo.com.uy/wp-content/uploads/2017/06/biologo.jpg",
-        location: "Canelones, Uruguay",
-        endDate: "2024-09-30",
-        isFinished: true
-      }
-    },
-    {
-      id: 4,
-      amount: 100,
-      date: "2024-11-14",
-      user: {
-        id: "12376515-3bea-4b0e-8fd2-4f0b0db24ebe",
-        userName: "lfranco",
-        email: "leonardojfs83@gmail.com"
-      },
-      project: {
-        id: 3,
-        name: "Reforestación en la Sierra de las Ánimas",
-        description: "Plantación de especies autóctonas para conservar la biodiversidad.",
-        imageUrl: "https://uruguaytravel.org/uploads/large/paseo-sierra-de-las-animas-4.webp",
-        location: "Maldonado, Uruguay",
-        endDate: "2023-12-20",
-        isFinished: true
-      }
-    }
-  ];
+interface User {
+    id: string;
+    userName: string;
+    email: string;
+}
 
-interface DateRange {
-    start: string;
-    end: string;
-  }
-  
-  interface TreeData {
-    project: string;
-    treesPlanted: number;
-    fundsRaised: number;
+interface Project {
+    id: number;
+    name: string;
+    description: string;
+    imageUrl: string;
+    location: string;
+    endDate: string;
+    isFinished: boolean;
+}
+
+interface ReportData {
+    id: number;
+    amount: number;
     date: string;
-  }
-  
-  interface ReportData {
-    treesPlantedPerMonth: number[];
-    fundsRaised: number[];
-    months: string[];
-  }
+    user: User;
+    project: Project;
+}
+
 
 const ReportPage: React.FC = () => {
-    // Datos iniciales para simular el ejemplo
-    const initialReportData: ReportData = {
-      treesPlantedPerMonth: [100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650],
-      fundsRaised: [500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3250],
-      months: ['Enero', 'Febrero', 'Marzo', "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"],
+
+    const [filteredData, setFilteredData] = useState<ReportData[]>(sampleData);
+    const [filters, setFilters] = useState({
+        startDate: '',
+        endDate: '',
+        projectId: '',
+        userName: '',
+        minAmount: '',
+        maxAmount: '',
+    });
+
+    // Función para manejar cambios en los filtros
+    const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFilters({
+            ...filters,
+            [name]: value,
+        });
     };
-  
-    const initialTreeData: TreeData[] = [
-      { project: 'Proyecto A', treesPlanted: 100, fundsRaised: 500, date: '2024-01-15' },
-      { project: 'Proyecto B', treesPlanted: 150, fundsRaised: 750, date: '2024-02-10' },
-      { project: 'Proyecto A', treesPlanted: 200, fundsRaised: 1000, date: '2024-03-05' },
-      { project: 'Proyecto C', treesPlanted: 250, fundsRaised: 1250, date: '2024-04-20' },
-      { project: 'Proyecto B', treesPlanted: 300, fundsRaised: 1500, date: '2024-05-12' },
-      { project: 'Proyecto A', treesPlanted: 350, fundsRaised: 1750, date: '2024-06-30' },
-      { project: 'Proyecto C', treesPlanted: 400, fundsRaised: 2000, date: '2024-07-25' },
-      { project: 'Proyecto B', treesPlanted: 450, fundsRaised: 2250, date: '2024-08-18' },
-      { project: 'Proyecto A', treesPlanted: 500, fundsRaised: 2500, date: '2024-09-05' },
-      { project: 'Proyecto C', treesPlanted: 550, fundsRaised: 2750, date: '2024-10-10' },
-      { project: 'Proyecto B', treesPlanted: 600, fundsRaised: 3000, date: '2024-11-22' },
-      { project: 'Proyecto A', treesPlanted: 650, fundsRaised: 3250, date: '2024-12-15' },
-    ];
-  
-    const [reportData, setReportData] = useState<ReportData>(initialReportData);
-    const [treeData, setTreeData] = useState<TreeData[]>(initialTreeData);
-  
-    const handleFilterChange = (filters: { dateRange: DateRange; project: string }) => {
-      const { dateRange, project } = filters;
-  
-      // Filtrar `treeData` basado en rango de fechas y proyecto
-      const filteredTreeData = initialTreeData.filter((item) => {
-        const itemDate = new Date(item.date);
-        const startDate = dateRange.start ? new Date(dateRange.start) : null;
-        const endDate = dateRange.end ? new Date(dateRange.end) : null;
-  
-        const isInDateRange = (!startDate || itemDate >= startDate) && (!endDate || itemDate <= endDate);
-        const isInProject = project ? item.project === project : true;
-  
-        return isInDateRange && isInProject;
-      });
-  
-      // Filtrar `reportData` para actualizar los datos por mes según los datos filtrados
-      const filteredReportData: ReportData = {
-        treesPlantedPerMonth: [0, 0, 0], // Reiniciar los contadores
-        fundsRaised: [0, 0, 0],
-        months: initialReportData.months,
-      };
-  
-      filteredTreeData.forEach((item) => {
-        const monthIndex = new Date(item.date).getMonth(); // Usar el mes de la fecha para el índice (0 = Enero, 1 = Febrero, ...)
-        if (monthIndex !== -1) {
-            filteredReportData.treesPlantedPerMonth[monthIndex] += item.treesPlanted;
-            filteredReportData.fundsRaised[monthIndex] += item.fundsRaised;
-          }
-      });
-  
-      // Actualizar el estado con los datos filtrados
-      setTreeData(filteredTreeData);
-      setReportData(filteredReportData);
+
+    // Función para aplicar los filtros
+    const applyFilters = () => {
+        let data = sampleData;
+
+        // Filtro por rango de fechas
+        if (filters.startDate) {
+            data = data.filter((item) => new Date(item.date) >= new Date(filters.startDate));
+        }
+        if (filters.endDate) {
+            data = data.filter((item) => new Date(item.date) <= new Date(filters.endDate));
+        }
+
+        // Filtro por proyecto
+        if (filters.projectId) {
+            data = data.filter((item) => item.project.id.toString() === filters.projectId);
+        }
+
+        // Filtro por usuario
+        if (filters.userName) {
+            data = data.filter((item) => item.user.userName === filters.userName);
+        }
+
+        // Filtro por monto mínimo y máximo
+        if (filters.minAmount) {
+            data = data.filter((item) => item.amount >= Number(filters.minAmount));
+        }
+        if (filters.maxAmount) {
+            data = data.filter((item) => item.amount <= Number(filters.maxAmount));
+        }
+
+        setFilteredData(data);
     };
-  
-    // Extract unique project names
-  const uniqueProjects = Array.from(new Set(initialTreeData.map(item => item.project)));
+
+    // Exportar a PDF
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+        doc.text("Informe de Actividades", 10, 10);
+
+        autoTable(doc, {
+            head: [["Usuario", "Árboles Plantados", "Proyecto", "Fecha", "Monto"]],
+            body: filteredData.map((entry) => [
+                entry.user.userName,
+                entry.amount,
+                entry.project.name,
+                new Date(entry.date).toLocaleDateString(),
+                `$${entry.amount}`,
+            ]),
+        });
+
+        doc.save("reporte.pdf");
+    };
+
+    // Exportar a CSV
+    const exportToCSV = () => {
+        const csvData = filteredData.map((entry) => ({
+            Usuario: entry.user.userName,
+            "Árboles Plantados": entry.amount,
+            Proyecto: entry.project.name,
+            Fecha: new Date(entry.date).toLocaleDateString(),
+            Monto: `$${entry.amount}`,
+        }));
+
+        const csv = Papa.unparse(csvData);
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", "reporte.csv");
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    // Datos para los gráficos
+    // const projects = Array.from(new Set(filteredData.map((d) => d.project.name)));
+    // const treesByProject = projects.map((project) =>
+    //     filteredData.filter((d) => d.project.name === project).reduce((sum, d) => sum + d.amount, 0)
+    // );
+    // const totalAmounts = projects.map((project) =>
+    //     filteredData.filter((d) => d.project.name === project).reduce((sum, d) => sum + d.amount, 0)
+    // );
+    // const dates = Array.from(new Set(filteredData.map((d) => d.date))).sort();
+    // const amountsByDate = dates.map((date) =>
+    //     filteredData.filter((d) => d.date === date).reduce((sum, d) => sum + d.amount, 0)
+    // );
+
+
 
     return (
-      <div>
-        <h2>Informe de Actividad</h2>
-        <ReportTable data={sampleData}/>
-        <ReportFilters onFilterChange={handleFilterChange} projects={uniqueProjects} />
-        <ReportChart data={reportData} />
-        <ExportButtons data={treeData} />
         <div>
-        <h2>Filtered Report Data</h2>
-        <ul>
-          {treeData.map((item, index) => (
-            <li key={index}>
-              {item.project} - {item.treesPlanted} trees planted, {item.fundsRaised} funds raised on {item.date}
-            </li>
-          ))}
-        </ul>
-      </div>
-      </div>
+            <h1 className="text-2xl pl-10 pt-5 font-Poppins font-bold">Informe de Actividades</h1>
+
+            {/* Filtros */}
+            <div className="filters">
+                <input
+                    type="date"
+                    name="startDate"
+                    value={filters.startDate}
+                    onChange={handleFilterChange}
+                    placeholder="Fecha de inicio"
+                />
+                <input
+                    type="date"
+                    name="endDate"
+                    value={filters.endDate}
+                    onChange={handleFilterChange}
+                    placeholder="Fecha de fin"
+                />
+                <select
+                    name="projectId"
+                    value={filters.projectId}
+                    onChange={handleFilterChange}
+                >
+                    <option value="">Seleccionar Proyecto</option>
+                    {[...new Set(sampleData.map((d) => d.project))].map((project) => (
+                        <option key={project.id} value={project.id}>
+                            {project.name}
+                        </option>
+                    ))}
+                </select>
+                <input
+                    type="text"
+                    name="userName"
+                    value={filters.userName}
+                    onChange={handleFilterChange}
+                    placeholder="Nombre de Usuario"
+                />
+                <input
+                    type="number"
+                    name="minAmount"
+                    value={filters.minAmount}
+                    onChange={handleFilterChange}
+                    placeholder="Monto mínimo"
+                />
+                <input
+                    type="number"
+                    name="maxAmount"
+                    value={filters.maxAmount}
+                    onChange={handleFilterChange}
+                    placeholder="Monto máximo"
+                />
+                <button className="reportButtons" onClick={applyFilters}>Aplicar Filtros</button>
+            </div>
+            <div>
+                <button className="reportButtons" onClick={exportToPDF}>Exportar a PDF</button>
+                <button className="reportButtons" onClick={exportToCSV}>Exportar a CSV</button>
+            </div>
+            {/* Tabla con los datos filtrados */}
+            <ReportTable data={filteredData} />
+            {/* Gráficos */}
+            {/* <div className="charts">
+                <ReportChart
+                    chartType="bar"
+                    title="Árboles Plantados por Proyecto"
+                    categories=   {projects} 
+                    series={[{ name: 'Árboles Plantados', data: treesByProject }]}
+                />
+                <ReportChart
+                    chartType="pie"
+                    title="Distribución de Fondos Recaudados"
+                    categories={projects}
+                    series={[{ name: 'Monto Recaudado', data: totalAmounts }]}
+                />
+                <ReportChart
+                    chartType="line"
+                    title="Evolución de Fondos Recaudados"
+                    categories={dates.map((date) => new Date(date).toLocaleDateString())}
+                    series={[{ name: 'Monto Recaudado', data: amountsByDate }]}
+                />
+            </div> */}
+        </div>
     );
-  };
-  
-  export default ReportPage;
-  
+};
+
+export default ReportPage;

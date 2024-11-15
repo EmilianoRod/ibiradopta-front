@@ -1,0 +1,78 @@
+[
+    {
+        "id": 1,
+        "amount": 100,
+        "date": "2024-11-11",
+        "user": {
+            "id": "54c5a2f9-3979-402a-b927-3124cdd63f99",
+            "userName": "jjolo",
+            "email": "asdasda@dasda.com"
+        },
+        "project": {
+            "id": 2,
+            "name": "Reforestación de la Cuenca del Río Santa Lucía",
+            "description": "Proyecto de reforestación en la cuenca para mejorar la calidad del agua.",
+            "imageUrl": "https://semanarioelpueblo.com.uy/wp-content/uploads/2017/06/biologo.jpg",
+            "location": "Canelones, Uruguay",
+            "endDate": "2024-09-30",
+            "isFinished": true
+        }
+    },
+    {
+        "id": 2,
+        "amount": 200,
+        "date": "2024-11-13",
+        "user": {
+            "id": "12376515-3bea-4b0e-8fd2-4f0b0db24ebe",
+            "userName": "lfranco",
+            "email": "leonardojfs83@gmail.com"
+        },
+        "project": {
+            "id": 1,
+            "name": "Reforestación del Parque Nacional Quebrada de los Cuervos",
+            "description": "Iniciativa para plantar 5,000 árboles nativos en el parque.",
+            "imageUrl": "https://7maravillas.uy/wp-content/uploads/2021/01/quebrada-cuervos-foto-uruguay-natural.jpg",
+            "location": "Treinta y Tres, Uruguay",
+            "endDate": "2025-05-15",
+            "isFinished": false
+        }
+    },
+    {
+        "id": 3,
+        "amount": 100,
+        "date": "2024-11-12",
+        "user": {
+            "id": "75e86d3a-d4fa-43d9-8b96-896cecd118ad",
+            "userName": "erers",
+            "email": "sadas@asdasd.com"
+        },
+        "project": {
+            "id": 2,
+            "name": "Reforestación de la Cuenca del Río Santa Lucía",
+            "description": "Proyecto de reforestación en la cuenca para mejorar la calidad del agua.",
+            "imageUrl": "https://semanarioelpueblo.com.uy/wp-content/uploads/2017/06/biologo.jpg",
+            "location": "Canelones, Uruguay",
+            "endDate": "2024-09-30",
+            "isFinished": true
+        }
+    },
+    {
+        "id": 4,
+        "amount": 100,
+        "date": "2024-11-14",
+        "user": {
+            "id": "12376515-3bea-4b0e-8fd2-4f0b0db24ebe",
+            "userName": "lfranco",
+            "email": "leonardojfs83@gmail.com"
+        },
+        "project": {
+            "id": 3,
+            "name": "Reforestación en la Sierra de las Ánimas",
+            "description": "Plantación de especies autóctonas para conservar la biodiversidad.",
+            "imageUrl": "https://uruguaytravel.org/uploads/large/paseo-sierra-de-las-animas-4.webp",
+            "location": "Maldonado, Uruguay",
+            "endDate": "2023-12-20",
+            "isFinished": true
+        }
+    }
+]
