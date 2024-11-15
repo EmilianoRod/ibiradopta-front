@@ -69,3 +69,13 @@
     flex: 1 1 calc(33% - 20px); /* Cada gráfico ocupa 1/3 del espacio */
      min-width: 300px;
   } 
+
+  #About {
+
+
+    font-weight: 400;
+    line-height: 1.5;
+    background-image: url('../public/fondo-hojas.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
