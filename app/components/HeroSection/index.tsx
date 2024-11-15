@@ -1,6 +1,6 @@
 const HeroSection = () => {
     return (  
-      <main className="py-10 bg-cover bg-center bg-no-repeat font-Poppins" style={{ backgroundImage: "url('/background-image.jpg')" }}>
+      <main className="py-10 bg-cover bg-center bg-no-repeat font-Poppins" style={{ backgroundImage: "url('/arbol.webp')" }}>
         <div className="pl-24 pr-96 flex flex-col space-y-8 pt-28 drop-shadow-2xl">
           <h1 className="text-white text-3xl font-bold">Plantá un árbol, transformá el futuro</h1>
           <p className="text-white text-2xl">

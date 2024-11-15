@@ -2,13 +2,6 @@ import NextAuth, { AuthOptions, TokenSet } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import KeycloakProvider from "next-auth/providers/keycloak";
 
-// interface bodySearchParams {
-//   client_id: String;
-//   client_secret: String;
-//   grant_type: String;
-//   refresh_token: String
-// }
-
 function requestRefreshOfAccessToken(token: JWT) {
   return fetch(`${process.env.AUTH_ISSUER}/protocol/openid-connect/token`, {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -26,8 +19,8 @@ function requestRefreshOfAccessToken(token: JWT) {
 export const authOptions: AuthOptions = {
   providers: [
     KeycloakProvider({
-      clientId: process.env.IBIRADOPTA_FRONTEND_CLIENT_ID,  // The Client ID of the Keycloak Client
-      clientSecret: process.env.IBIRADOPTA_FRONTEND_CLIENT_SECRET, // The Client Secret of the Keycloak Client
+      clientId: process.env.IBIRADOPTA_FRONTEND_CLIENT_ID,
+      clientSecret: process.env.IBIRADOPTA_FRONTEND_CLIENT_SECRET,
       issuer: process.env.AUTH_ISSUER,
     }),
   ],
@@ -38,47 +31,44 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async jwt({ token, account, profile }) {
       if (account) {
-        token.idToken = account.id_token
-        token.accessToken = account.access_token
-        token.refreshToken = account.refresh_token
-        token.expiresAt = account.expires_at
-        token.userName = profile?.name
-        return token
+        token.idToken = account.id_token;
+        token.accessToken = account.access_token;
+        token.refreshToken = account.refresh_token;
+        token.expiresAt = account.expires_at;
+        token.userName = profile?.name;
+        return token;
       }
       if (token.expiresAt && Date.now() < (token.expiresAt! * 1000 - 60 * 1000)) {
-        return token
+        return token;
       } else {
         try {
-          const response = await requestRefreshOfAccessToken(token)
+          const response = await requestRefreshOfAccessToken(token);
 
-          const tokens: TokenSet = await response.json()
+          const tokens: TokenSet = await response.json();
 
-          if (!response.ok) throw tokens
+          if (!response.ok) throw tokens;
 
           const updatedToken: JWT = {
-            ...token, // Keep the previous token properties
+            ...token,
             idToken: tokens.id_token,
             accessToken: tokens.access_token,
             expiresAt: Math.floor(Date.now() / 1000 + (tokens.expires_in as number)),
             refreshToken: tokens.refresh_token ?? token.refreshToken,
-          }
-          return updatedToken
+          };
+          return updatedToken;
         } catch (error) {
-          console.error("Error refreshing access token", error)
-          return { ...token, error: "RefreshAccessTokenError" }
+          console.error("Error refreshing access token", error);
+          return { ...token, error: "RefreshAccessTokenError" };
         }
       }
     },
     async session({ session, token }) {
-      session.accessToken = token.accessToken
+      session.accessToken = token.accessToken;
       session.userName = token.userName;
-      return session
-    }
+      return session;
+    },
   },
-
-
 };
 
-
 const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST }
+export { handler as GET, handler as POST };

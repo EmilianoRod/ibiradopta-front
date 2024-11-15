@@ -2,7 +2,7 @@ import Image from "next/image";
 
 function AboutSection() {
     return (
-      <section id="About" className="flex h-screen bg-gray-100 py-10 font-Poppins">
+      <section id="About" className="flex h-screen bg-gray-100 py-10 font-Poppins" style={{ backgroundImage: "url('/fondo-hojas.png')" }}> 
         <div className="flex flex-col pl-10 pr-80 pt-10 space-y-20">
           <h1 className="text-moss-green text-3xl font-bold">Sobre nosotros</h1>
           <p className=' text-2xl text-moss-green '> En IBIRADOPTÁ, creemos que cada árbol cuenta para un futuro más verde y saludable. Somos un grupo de personas apasionadas por la naturaleza, unidos por la misión de restaurar nuestro planeta, árbol por árbol. Facilitamos a individuos, empresas y comunidades la oportunidad de adoptar y plantar árboles en diversas regiones, promoviendo la biodiversidad, mejorando la calidad del aire y ayudando a combatir el cambio climático.
