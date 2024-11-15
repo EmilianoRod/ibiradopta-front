@@ -6,3 +6,10 @@
 @tailwind utilities;
 
 
+#About {
+    font-weight: 400;
+    line-height: 1.5;
+    background-image: url('../public/fondo-hojas.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
