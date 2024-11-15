@@ -25,7 +25,7 @@ export default function Logout() {
   };
 
   const handleInformeClick = () => {
-    router.push("/informes");
+    router.push("/report");
     setIsMenuOpen(false);
   };
 

@@ -19,7 +19,8 @@ export default function ProfilePage() {
     lastName: session?.user?.lastName || "",
     email: session?.user?.email || "",
     password: "",
-    direction: session?.user?.direction || ""
+    direction: session?.user?.direction || "",
+    fechaNacimiento: session?.user?.fechaNacimiento || ""
   });
 
   const handleChange = (e: { target: { name: string; value: any } }) => {
@@ -123,6 +124,17 @@ export default function ProfilePage() {
             id="direction"
             name="direction"
             value={formData.direction}
+            onChange={handleChange}
+            className="w-full p-2 mt-1 border rounded-md"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="fechaNacimiento" className="block text-sm font-semibold">Fecha de nacimiento</label>
+          <input
+            type="text"
+            id="fechaNacimiento"
+            name="fechaNacimiento"
+            value={formData.fechaNacimiento}
             onChange={handleChange}
             className="w-full p-2 mt-1 border rounded-md"
           />
