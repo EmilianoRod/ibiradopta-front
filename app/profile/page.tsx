@@ -5,21 +5,17 @@ import { useState } from "react";
 export default function ProfilePage() {
   const { data: session } = useSession();
 
-  // Añadir un estado para el formulario con índice dinámico
-  const [formData, setFormData] = useState<{
-    id: any;
-    name: string;
-    lastName: any;
-    email: string;
-    password: string;
-    direction: any;
-  } & { [key: string]: any }>({
-    id: session?.user?.id, // Asume que el id está disponible en session.user.id
-    name: session?.user?.name || "",
-    lastName: session?.user?.lastName || "",
+  // Divide el nombre completo en nombre y apellido
+  const [firstName, lastName] = session?.user?.name?.split(" ") || ["", ""];
+
+  const [formData, setFormData] = useState({
+    id: session?.user?.id || "",
+    name: firstName || "",
+    lastName: lastName || "",
     email: session?.user?.email || "",
     password: "",
-    direction: session?.user?.direction || ""
+    direction: session?.user?.direction || "",
+    fechaNacimiento: session?.user?.fechaNacimiento || "",
   });
 
   const handleChange = (e: { target: { name: string; value: any } }) => {
@@ -33,7 +29,6 @@ export default function ProfilePage() {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
-    // Filtra solo los campos que no están vacíos o indefinidos
     const body = Object.keys(formData).reduce((acc, key) => {
       if (formData[key] !== "" && formData[key] !== undefined) {
         acc[key] = formData[key];
@@ -56,7 +51,6 @@ export default function ProfilePage() {
         throw new Error("Error al actualizar los datos");
       }
 
-      const updatedUser = await response.json();
       alert("Datos actualizados exitosamente");
     } catch (error) {
       console.error("Error al actualizar los datos:", error);
@@ -123,6 +117,17 @@ export default function ProfilePage() {
             id="direction"
             name="direction"
             value={formData.direction}
+            onChange={handleChange}
+            className="w-full p-2 mt-1 border rounded-md"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="fechaNacimiento" className="block text-sm font-semibold">Fecha de nacimiento</label>
+          <input
+            type="text"
+            id="fechaNacimiento"
+            name="fechaNacimiento"
+            value={formData.fechaNacimiento}
             onChange={handleChange}
             className="w-full p-2 mt-1 border rounded-md"
           />
