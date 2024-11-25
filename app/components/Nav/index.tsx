@@ -7,14 +7,16 @@ import RegisterButton from "../RegisterButton";
 import { useSession } from "next-auth/react";
 
 const Nav = () => {
-  
   const { data: session } = useSession();
 
   return (
     <nav className="bg-white p-4">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex">
-          <Image src="/logo.svg" alt="logo" width={108} height={96} />
+          {/* Logo como enlace que lleva al Home */}
+          <Link href="/">
+            <Image src="/logo.svg" alt="logo" width={108} height={96} />
+          </Link>
           <div className="text-moss-green text-5xl font-Righteous pt-8">IBIRADOPTÁ</div>
         </div>
         <div className="space-x-10 font-Poppins">
