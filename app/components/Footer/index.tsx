@@ -1,4 +1,9 @@
 import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFacebook } from "@fortawesome/free-brands-svg-icons";
+import { faInstagram } from "@fortawesome/free-brands-svg-icons/faInstagram";
+import { faLinkedin } from "@fortawesome/free-brands-svg-icons/faLinkedin";
+import { faXTwitter } from "@fortawesome/free-brands-svg-icons/faXTwitter";
 
 function Footer() {
   return (
@@ -16,9 +21,14 @@ function Footer() {
         <span>+598 98 666 555</span>
         <span>info@ibiradopta.org.uy</span>
       </div>
-      <div className="flex flex-col order-3 space-y-8">
-        <div>LOGOS SOCIAL MEDIA</div>
-        <span>© Fundación Dream Team</span>
+      <div className="flex flex-col order-3 space-y-8 pt-10">
+        <div className="flex space-x-8 ">
+        <FontAwesomeIcon icon={faXTwitter} style={{color: "#ffffff",}} />
+        <FontAwesomeIcon icon={faLinkedin} style={{color: "#ffffff",}} />
+        <FontAwesomeIcon icon={faFacebook} style={{color: "#ffffff",}} />
+        <FontAwesomeIcon icon={faInstagram} style={{color: "#ffffff",}} />
+        </div>
+        <span>© Fundación Dream Tree</span>
       </div>
     </footer>
   );
