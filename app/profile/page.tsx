@@ -1,24 +1,38 @@
 "use client";
+
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function ProfilePage() {
   const { data: session } = useSession();
 
-  // Divide el nombre completo en nombre y apellido
-  const [firstName, lastName] = session?.user?.name?.split(" ") || ["", ""];
-
   const [formData, setFormData] = useState({
-    id: session?.user?.id || "",
-    name: firstName || "",
-    lastName: lastName || "",
-    email: session?.user?.email || "",
+    id: "",
+    name: "",
+    lastName: "",
+    email: "",
     password: "",
-    direction: session?.user?.direction || "",
-    fechaNacimiento: session?.user?.fechaNacimiento || "",
+    address: "",
+    fechaNacimiento: "",
   });
 
-  const handleChange = (e: { target: { name: string; value: any } }) => {
+  // Rellena los valores iniciales de `formData` al cargar el componente
+  useEffect(() => {
+    if (session?.user) {
+      const [firstName, lastName] = session.user.name?.split(" ") || ["", ""];
+      setFormData({
+        id: session.user.id || "",
+        name: firstName || "",
+        lastName: lastName || "",
+        email: session.user.email || "",
+        password: "",
+        address: session.user.address || "",
+        fechaNacimiento: session.user.fechaNacimiento || "",
+      });
+    }
+  }, [session]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -26,35 +40,45 @@ export default function ProfilePage() {
     }));
   };
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const body = Object.keys(formData).reduce((acc, key) => {
-      if (formData[key] !== "" && formData[key] !== undefined) {
-        acc[key] = formData[key];
+      if (formData[key as keyof typeof formData] !== "" && formData[key as keyof typeof formData] !== undefined) {
+        acc[key] = formData[key as keyof typeof formData];
       }
       return acc;
     }, {} as Partial<typeof formData>);
 
+    console.log("Body enviado:", body);
+
     try {
-      const response = await fetch("http://localhost:9090/users/update", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_GATEWAY_URL}/users/update`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.accessToken}`,
         },
         body: JSON.stringify(body),
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error details:", errorData);
-        throw new Error("Error al actualizar los datos");
+        const contentType = response.headers.get("Content-Type");
+        if (contentType && contentType.includes("application/json")) {
+          const errorData = await response.json();
+          console.error("Error details:", errorData);
+          throw new Error(errorData.message || "Error al actualizar los datos");
+        } else {
+          const errorText = await response.text();
+          console.error("Error details (non-JSON):", errorText);
+          throw new Error("Error al actualizar los datos");
+        }
       }
 
       alert("Datos actualizados exitosamente");
     } catch (error) {
       console.error("Error al actualizar los datos:", error);
-      alert("Error al actualizar los datos");
+      alert(error.message || "Error al actualizar los datos");
     }
   };
 
@@ -111,12 +135,12 @@ export default function ProfilePage() {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="direction" className="block text-sm font-semibold">Direccion</label>
+          <label htmlFor="address" className="block text-sm font-semibold">Dirección</label>
           <input
             type="text"
-            id="direction"
-            name="direction"
-            value={formData.direction}
+            id="address"
+            name="address"
+            value={formData.address}
             onChange={handleChange}
             className="w-full p-2 mt-1 border rounded-md"
           />

@@ -8,6 +8,7 @@ import Nav from "./components/Nav";
 import "./globals.css";
 import type { Metadata } from "next"; 
 
+
 export const metadata: Metadata = {
   title: "Dream Tree",
   description: "Bienvenido a Dream Tree - Explora nuestras características y servicios",
