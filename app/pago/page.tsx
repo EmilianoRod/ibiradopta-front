@@ -2,13 +2,13 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { Wallet } from "@mercadopago/sdk-react";
+import { useRouter } from "next/navigation"; // Importa useRouter
 
 function ApoyarCard() {
   const { data: session, status } = useSession();
   const [cantidad, setCantidad] = useState(1); // Cantidad de árboles a adoptar
   const [metodoPago, setMetodoPago] = useState(""); // Método de pago seleccionado
-  const [preferenceId, setPreferenceId] = useState<string | null>(null); // ID de preferencia
+  const router = useRouter(); // Inicializa useRouter
 
   // Maneja el cambio en la cantidad de árboles
   const handleCantidadChange = (type: string) => {
@@ -26,18 +26,15 @@ function ApoyarCard() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${session?.accessToken}`,
           },
-          body: JSON.stringify([
-            {
-              id: "1",
-              name: "Reforestación del Parque Nacional Quebrada de los Cuervos",
-              description: "Iniciativa para plantar 5,000 árboles nativos en el parque.",
-              imageUrl:
-                "https://7maravillas.uy/wp-content/uploads/2021/01/quebrada-cuervos-foto-uruguay-natural.jpg",
-              location: "Treinta y Tres, Uruguay",
-              quantity: cantidad, 
-              unitPrice: 1000, 
-            },
-          ]),
+          body: JSON.stringify([{
+            id: "1",
+            name: "Reforestación del Parque Nacional Quebrada de los Cuervos",
+            description: "Iniciativa para plantar 5,000 árboles nativos en el parque.",
+            imageUrl: "https://7maravillas.uy/wp-content/uploads/2021/01/quebrada-cuervos-foto-uruguay-natural.jpg",
+            location: "Treinta y Tres, Uruguay",
+            quantity: cantidad,
+            unitPrice: 1000,
+          }]),
         }
       );
 
@@ -46,7 +43,7 @@ function ApoyarCard() {
       }
 
       const data = await response.json();
-      return data.id; // Retorna el ID de la preferencia
+      return data; // Suponiendo que el backend devuelve una URL
     } catch (error) {
       console.error("Error al crear la preferencia:", error);
     }
@@ -59,9 +56,9 @@ function ApoyarCard() {
       return;
     }
 
-    const id = await createPreference(session.user.id);
-    if (id) {
-      setPreferenceId(id); // Guarda el ID de la preferencia para inicializar el Wallet
+    const url = await createPreference(session.user.id);
+    if (url) {
+      router.push(url.preferenceUrl); // Redirige a la URL obtenida del backend
     }
   };
 
@@ -121,16 +118,6 @@ function ApoyarCard() {
         >
           Ir a Pagar
         </button>
-
-        {/* Componente Wallet de Mercado Pago */}
-        {preferenceId && (
-          <Wallet
-            initialization={{ preferenceId }}
-            customization={{
-              texts: { valueProp: "smart_option" },
-            }}
-          />
-        )}
       </div>
     </div>
   );
