@@ -1,36 +1,17 @@
 "use client";
-
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 
 export default function ProfilePage() {
-  const { data: session } = useSession();
-
+  const { data: session, status } = useSession();
   const [formData, setFormData] = useState({
     id: "",
-    name: "",
+    userName: "",
+    firstName: "",
     lastName: "",
     email: "",
-    password: "",
     address: "",
-    fechaNacimiento: "",
   });
-
-  // Rellena los valores iniciales de `formData` al cargar el componente
-  useEffect(() => {
-    if (session?.user) {
-      const [firstName, lastName] = session.user.name?.split(" ") || ["", ""];
-      setFormData({
-        id: session.user.id || "",
-        name: firstName || "",
-        lastName: lastName || "",
-        email: session.user.email || "",
-        password: "",
-        address: session.user.address || "",
-        fechaNacimiento: session.user.fechaNacimiento || "",
-      });
-    }
-  }, [session]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -43,14 +24,13 @@ export default function ProfilePage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Filtrar datos vacíos o indefinidos
     const body = Object.keys(formData).reduce((acc, key) => {
-      if (formData[key as keyof typeof formData] !== "" && formData[key as keyof typeof formData] !== undefined) {
-        acc[key] = formData[key as keyof typeof formData];
+      if (formData[key] !== "" && formData[key] !== undefined) {
+        acc[key] = formData[key];
       }
       return acc;
     }, {} as Partial<typeof formData>);
-
-    console.log("Body enviado:", body);
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_GATEWAY_URL}/users/update`, {
@@ -63,17 +43,19 @@ export default function ProfilePage() {
       });
 
       if (!response.ok) {
-        const contentType = response.headers.get("Content-Type");
-        if (contentType && contentType.includes("application/json")) {
-          const errorData = await response.json();
-          console.error("Error details:", errorData);
-          throw new Error(errorData.message || "Error al actualizar los datos");
-        } else {
-          const errorText = await response.text();
-          console.error("Error details (non-JSON):", errorText);
-          throw new Error("Error al actualizar los datos");
-        }
+        const errorData = await response.json();
+        console.error("Error details:", errorData);
+        throw new Error(errorData.message || "Error al actualizar los datos");
       }
+
+      const updatedData = await response.json();
+      console.log("Datos actualizados desde el servidor:", updatedData);
+
+      // Actualizar el estado del formulario con los datos devueltos
+      setFormData((prev) => ({
+        ...prev,
+        ...updatedData,
+      }));
 
       alert("Datos actualizados exitosamente");
     } catch (error) {
@@ -82,8 +64,28 @@ export default function ProfilePage() {
     }
   };
 
-  if (!session) {
-    return <div>No estás autenticado. Por favor, inicia sesión.</div>;
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (session?.user?.id) {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_GATEWAY_URL}/users/id/${session.user.id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+        });
+
+        const profile = await response.json();
+        setFormData(profile);
+      }
+    };
+    
+    fetchProfile();
+  }, [session?.user?.id]);
+
+
+  if (!session || status === "loading") {
+    return <div>Cargando...</div>;
   }
 
   return (
@@ -91,18 +93,35 @@ export default function ProfilePage() {
       <h1 className="text-2xl font-bold mb-4">Editar perfil</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="name" className="block text-sm font-semibold">Nombre</label>
+          <label htmlFor="userName" className="block text-sm font-semibold">
+            Nombre de usuario
+          </label>
           <input
             type="text"
-            id="name"
-            name="name"
-            value={formData.name}
+            id="userName"
+            name="userName"
+            value={formData.userName}
             onChange={handleChange}
             className="w-full p-2 mt-1 border rounded-md"
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="lastName" className="block text-sm font-semibold">Apellido</label>
+          <label htmlFor="firstName" className="block text-sm font-semibold">
+            Nombre
+          </label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            className="w-full p-2 mt-1 border rounded-md"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="lastName" className="block text-sm font-semibold">
+            Apellido
+          </label>
           <input
             type="text"
             id="lastName"
@@ -113,7 +132,9 @@ export default function ProfilePage() {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-semibold">Email</label>
+          <label htmlFor="email" className="block text-sm font-semibold">
+            Email
+          </label>
           <input
             type="email"
             id="email"
@@ -124,34 +145,14 @@ export default function ProfilePage() {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="password" className="block text-sm font-semibold">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full p-2 mt-1 border rounded-md"
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="address" className="block text-sm font-semibold">Dirección</label>
+          <label htmlFor="address" className="block text-sm font-semibold">
+            Dirección
+          </label>
           <input
             type="text"
             id="address"
             name="address"
             value={formData.address}
-            onChange={handleChange}
-            className="w-full p-2 mt-1 border rounded-md"
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="fechaNacimiento" className="block text-sm font-semibold">Fecha de nacimiento</label>
-          <input
-            type="text"
-            id="fechaNacimiento"
-            name="fechaNacimiento"
-            value={formData.fechaNacimiento}
             onChange={handleChange}
             className="w-full p-2 mt-1 border rounded-md"
           />
