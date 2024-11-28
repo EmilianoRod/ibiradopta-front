@@ -1,4 +1,5 @@
 "use client";
+
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 
@@ -12,6 +13,7 @@ export default function ProfilePage() {
     email: "",
     address: "",
   });
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -24,7 +26,6 @@ export default function ProfilePage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Filtrar datos vacíos o indefinidos
     const body = Object.keys(formData).reduce((acc, key) => {
       if (formData[key] !== "" && formData[key] !== undefined) {
         acc[key] = formData[key];
@@ -51,13 +52,13 @@ export default function ProfilePage() {
       const updatedData = await response.json();
       console.log("Datos actualizados desde el servidor:", updatedData);
 
-      // Actualizar el estado del formulario con los datos devueltos
       setFormData((prev) => ({
         ...prev,
         ...updatedData,
       }));
 
-      alert("Datos actualizados exitosamente");
+      setShowSuccessAlert(true);
+      setTimeout(() => setShowSuccessAlert(false), 3000);
     } catch (error) {
       console.error("Error al actualizar los datos:", error);
       alert(error.message || "Error al actualizar los datos");
@@ -79,10 +80,9 @@ export default function ProfilePage() {
         setFormData(profile);
       }
     };
-    
+
     fetchProfile();
   }, [session?.user?.id]);
-
 
   if (!session || status === "loading") {
     return <div>Cargando...</div>;
@@ -90,6 +90,26 @@ export default function ProfilePage() {
 
   return (
     <div className="container mx-auto p-4">
+      {showSuccessAlert && (
+        <div
+          id="alert-border-3"
+          className="flex items-center p-4 mb-4 text-green-800 border-t-4 border-green-300 bg-green-50 dark:text-green-400 dark:bg-gray-800 dark:border-green-800"
+          role="alert"
+        >
+          <svg
+            className="flex-shrink-0 w-4 h-4"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+          </svg>
+          <div className="ms-3 text-sm font-medium">
+            Cambios actualizados exitosamente.
+          </div>
+        </div>
+      )}
       <h1 className="text-2xl font-bold mb-4">Editar perfil</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -167,3 +187,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+

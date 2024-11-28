@@ -1,6 +1,4 @@
 import { ReactNode } from "react";
-import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
 import { Providers } from "./Providers";
 import SessionGuard from "./components/SessionGuard";
 import Footer from "./components/Footer";
@@ -15,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const session = await getServerSession(authOptions);
+  
 
   return (
     <html lang="es">

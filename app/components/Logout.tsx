@@ -1,5 +1,4 @@
-"use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import federatedLogout from "../utils/federatedLogout";
@@ -12,12 +11,16 @@ const getUserInitials = (name: string) => {
 };
 
 export default function Logout() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [initials, setInitials] = useState<string>("");
   const router = useRouter();
 
-  const userName = session?.user?.name || "User";
-  const initials = getUserInitials(userName);
+  useEffect(() => {
+    if (session?.user?.name) {
+      setInitials(getUserInitials(session.user.name));
+    }
+  }, [session?.user?.name]); // Dependencia en la sesión para actualizar al cambiar
 
   const handleProfileClick = () => {
     router.push("/profile");
@@ -30,9 +33,9 @@ export default function Logout() {
   };
 
   const handleLogout = async () => {
-    await federatedLogout(); 
+    await federatedLogout();
     setIsMenuOpen(false);
-    router.push("/"); 
+    router.push("/");
   };
 
   return (
@@ -47,7 +50,7 @@ export default function Logout() {
 
       {/* Menú desplegable */}
       {isMenuOpen && (
-        <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-10">
+        <div className="absolute left-full top-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-10">
           <button
             onClick={handleProfileClick}
             className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
