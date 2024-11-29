@@ -164,7 +164,7 @@ export default function ProfilePage() {
             className="w-full p-2 mt-1 border rounded-md"
           />
         </div>
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label htmlFor="address" className="block text-sm font-semibold">
             Dirección
           </label>
@@ -176,7 +176,7 @@ export default function ProfilePage() {
             onChange={handleChange}
             className="w-full p-2 mt-1 border rounded-md"
           />
-        </div>
+        </div> */}
         <button
           type="submit"
           className="bg-moss-green text-white px-6 py-2 rounded-full hover:bg-green-700"
