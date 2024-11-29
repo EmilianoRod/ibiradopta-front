@@ -19,7 +19,6 @@ export default function Logout() {
 
   useEffect(() => {
 
-    console.log("Sesión:", session?.user);
     if (session?.user?.name) {
       setInitials(getUserInitials(session.user.name));
     }

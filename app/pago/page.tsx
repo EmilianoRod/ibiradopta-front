@@ -25,7 +25,6 @@ function ApoyarCard() {
 
   // Obtén el id del proyecto desde los parámetros de la URL
   const id = searchParams.get("proyecto");
-  console.log("ID del proyecto desde la URL:", id);
 
   // Fetch para obtener el proyecto
   useEffect(() => {

@@ -60,8 +60,11 @@ const ReportPage: React.FC = () => {
                 },
             });
             const data = await response.json();
-            setAllData(data);  // Guardar todos los datos
-            setFilteredData(data);  // Inicialmente los datos filtrados son todos los datos
+
+            // Ordenar los datos por fecha de forma descendente o ascendente según prefieras
+            const sortedData = data.sort((a: ReportData, b: ReportData) => new Date(a.date).getTime() - new Date(b.date).getTime());
+            setAllData(sortedData);  // Guardar todos los datos
+            setFilteredData(sortedData);  // Inicialmente los datos filtrados son todos los datos
 
             // Establecer los filtros de fecha por el mes en curso
             const currentDate = new Date();
@@ -134,8 +137,8 @@ const ReportPage: React.FC = () => {
         setFilteredData(data);
     };
 
-       // Limpiar los filtros y aplicar el filtro por defecto (mes actual)
-       const clearFilters = () => {
+    // Limpiar los filtros y aplicar el filtro por defecto (mes actual)
+    const clearFilters = () => {
         // Establecer los filtros al mes actual
         const currentDate = new Date();
         const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
@@ -157,7 +160,7 @@ const ReportPage: React.FC = () => {
         applyFilters();
     }, [filters]);  // Aplicamos los filtros cuando el estado 'filters' cambie
 
-    
+
 
     // Exportar a PDF
     const exportToPDF = () => {

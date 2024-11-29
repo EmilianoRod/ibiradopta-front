@@ -50,7 +50,6 @@ export default function ProfilePage() {
       }
 
       const updatedData = await response.json();
-      console.log("Datos actualizados desde el servidor:", updatedData);
 
       setFormData((prev) => ({
         ...prev,
