@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation"; // Importa useRouter
 
 function ApoyarCard() {
@@ -105,10 +105,8 @@ function ApoyarCard() {
             <option value="" disabled>
               Seleccione un método
             </option>
-            <option value="Tarjeta de crédito">Tarjeta de crédito</option>
-            <option value="Tarjeta de débito">Tarjeta de débito</option>
-            <option value="PayPal">PayPal</option>
-          </select>
+            <option value="Mercadopago">Mercadopago</option>
+            </select>
         </div>
 
         {/* Botón para ir a pagar */}

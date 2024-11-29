@@ -7,28 +7,30 @@ import { faXTwitter } from "@fortawesome/free-brands-svg-icons/faXTwitter";
 
 function Footer() {
   return (
-    <footer className="flex bg-moss-green p-8 text-center text-white font-Poppins justify-between">
-     <div className="flex flex-col text-left space-y-3 order-1">
-        <Link href="#">Plantá un árbol con nosotros</Link>
-        <Link href="#">Sobre nosotros</Link>
-        <Link href="#">Dónde plantamos nuestros árboles</Link>
-        <Link href="#">Contacto</Link>
+    <footer className="flex flex-col lg:flex-row bg-moss-green text-white font-Poppins p-6 lg:p-12 space-y-6 lg:space-y-0">
+     <div className="flex-1 space-y-3 text-center lg:text-left">
+        <Link href="#" className="hover:underline block">Plantá un árbol con nosotros</Link>
+        <Link href="#" className="hover:underline block">Sobre nosotros</Link>
+        <Link href="#" className="hover:underline block">Dónde plantamos nuestros árboles</Link>
+        <Link href="#" className="hover:underline block">Contacto</Link>
       </div>
-      <div className="flex flex-col space-y-3 text-left align-center order-2">
-        <span>Ibiradoptá</span>
-        <span>Calle 7 esq. Calle 6</span>
-        <span>Montevideo, Uruguay</span>
-        <span>+598 98 666 555</span>
-        <span>info@ibiradopta.org.uy</span>
+      
+      <div className="flex-8 space-y-2 text-center lg:text-left">
+        <p className="font-semibold">Ibiradoptá</p>
+        <p>Calle 7 esq. Calle 6</p>
+        <p>Montevideo, Uruguay</p>
+        <p>+598 98 666 555</p>
+        <p>info@ibiradopta.org.uy</p>
       </div>
-      <div className="flex flex-col order-3 space-y-8 pt-10">
-        <div className="flex space-x-8 ">
-        <FontAwesomeIcon icon={faXTwitter} style={{color: "#ffffff",}} />
-        <FontAwesomeIcon icon={faLinkedin} style={{color: "#ffffff",}} />
-        <FontAwesomeIcon icon={faFacebook} style={{color: "#ffffff",}} />
-        <FontAwesomeIcon icon={faInstagram} style={{color: "#ffffff",}} />
+      
+      <div className="flex-1 flex flex-col order-3 space-y-4">
+        <div className="flex justify-center lg:justify-end space-x-4">
+        <FontAwesomeIcon icon={faXTwitter} className="w-6 h-6 md:w-8 md:h-8" style={{color: "#ffffff",}} />
+        <FontAwesomeIcon icon={faLinkedin} className="w-6 h-6 md:w-8 md:h-8" style={{color: "#ffffff",}} />
+        <FontAwesomeIcon icon={faFacebook} className="w-6 h-6 md:w-8 md:h-8" style={{color: "#ffffff",}} />
+        <FontAwesomeIcon icon={faInstagram} className="w-6 h-6 md:w-8 md:h-8" style={{color: "#ffffff",}} />
         </div>
-        <span>© Fundación Dream Tree</span>
+        <span className="text-center lg:text-end">© Fundación Dream Tree</span>
       </div>
     </footer>
   );

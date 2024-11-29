@@ -27,18 +27,19 @@ export default function FAQItem({ question, answer, isFocused, onFocus, onToggle
 
     return (
         <div
-            className="flex-column space-y-4 p-3 font-Poppins"
+            className="p-4 cursor-pointer focus:outline-none focus:bg-gray-100"
             tabIndex={0}
             onFocus={onFocus}
             onKeyDown={handleKeyDown}
             style={{
                 cursor: 'pointer',
             }}>
-            <div className={`flex ${isFocused ? 'text-green-500' : 'text-moss-green'} hover:text-green-500 justify-between`} onClick={toggleOpen} style={{ fontWeight: 'bold' }}>
-                {question}
-                <Image className="" src={isOpen ? "/icon-minus.svg" : "/plus.png"} alt="icon" width={50} height={50} />
+            <div className={`flex justify-between items-center ${isFocused ? 'text-green-500' : 'text-moss-green'} hover:text-green-500`} onClick={toggleOpen} style={{ fontWeight: 'bold' }}> 
+            <span className="text-left text-lg lg:text-xl">{question}</span>
+
+                <Image className="" src={isOpen ? "/icon-minus.svg" : "/plus.png"} alt="icon" width={isOpen ? 24 : 20} height={isOpen ? 24 : 20} className="lg:w-10 lg:h-10" />
             </div>
-            {isOpen && <p className="text-moss-green pr-24 ">{answer}</p>}
+            {isOpen && <p className="mt-2 text-moss-green text-left text-base lg:text-lg ">{answer}</p>}
         </div>
     );
 } 

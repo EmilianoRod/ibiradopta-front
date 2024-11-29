@@ -51,7 +51,7 @@ export default function FAQList() {
 
 
     return (
-        <div className='divide-y divide-solid px-10' onKeyDown={handleKeyDown}>
+        <div className='divide-y divide-gray-400 max-w-4xl mx-auto' onKeyDown={handleKeyDown}>
             {faqs.map((faq, index) => (
                 <FAQItem key={index} question={faq.question} answer={faq.answer}
                     isFocused={focusedIndex === index}

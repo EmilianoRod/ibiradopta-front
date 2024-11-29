@@ -1,8 +1,5 @@
 "use client";
 
-import { signIn } from "next-auth/react";
-import { useEffect } from "react";
-
 export default function RegisterButton() {
     const handleRegister = () => {
       const keycloakRegistrationUrl = `${process.env.NEXT_PUBLIC_KEYCLOAK_URL}/realms/ibiradopta/protocol/openid-connect/registrations?client_id=ibiradopta-frontend&response_type=code&scope=openid&redirect_uri=${process.env.NEXT_PUBLIC_HOST}`;
