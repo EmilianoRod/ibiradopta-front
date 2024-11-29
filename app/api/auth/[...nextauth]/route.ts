@@ -1,5 +1,4 @@
 import NextAuth, { AuthOptions, TokenSet } from "next-auth";
-import { JWT } from "next-auth/jwt";
 import KeycloakProvider from "next-auth/providers/keycloak";
 
 // Función para solicitar la actualización del token de acceso
@@ -77,6 +76,7 @@ export const authOptions: AuthOptions = {
       session.user = {
         ...session.user,
         id: token.id, // Añade el ID del usuario a la sesión
+        roles: token.realm_access?.roles || [], // Añade los roles del usuario a la sesión
       };
       return session;
     },

@@ -33,7 +33,7 @@ function ApoyarCard() {
             imageUrl: "https://7maravillas.uy/wp-content/uploads/2021/01/quebrada-cuervos-foto-uruguay-natural.jpg",
             location: "Treinta y Tres, Uruguay",
             quantity: cantidad,
-            unitPrice: 1000,
+            price: 100,
           }]),
         }
       );

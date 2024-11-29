@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 // import ReportFilters from "./ReportFilters";
 // import ReportChart from "./ReportChart";
 // import ExportButtons from "./ExportButtons";
@@ -7,7 +8,6 @@ import ReportTable from "./ReportTable";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import Papa from "papaparse";
-import sampleData from "./sampleData.json";
 
 interface User {
     id: string;
@@ -27,6 +27,7 @@ interface Project {
 
 interface ReportData {
     id: number;
+    quantity: number;
     amount: number;
     date: string;
     user: User;
@@ -36,7 +37,9 @@ interface ReportData {
 
 const ReportPage: React.FC = () => {
 
-    const [filteredData, setFilteredData] = useState<ReportData[]>(sampleData);
+    const { data: session } = useSession();
+    const [allData, setAllData] = useState<ReportData[]>([]);  // Todos los datos
+    const [filteredData, setFilteredData] = useState<ReportData[]>([]);
     const [filters, setFilters] = useState({
         startDate: '',
         endDate: '',
@@ -45,6 +48,49 @@ const ReportPage: React.FC = () => {
         minAmount: '',
         maxAmount: '',
     });
+
+    // Función para obtener los datos de la API <--- Leo
+    const fetchData = async () => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_GATEWAY_URL}/payments/filters`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${session?.accessToken}`,
+                },
+            });
+            const data = await response.json();
+            setAllData(data);  // Guardar todos los datos
+            setFilteredData(data);  // Inicialmente los datos filtrados son todos los datos
+
+            // Establecer los filtros de fecha por el mes en curso
+            const currentDate = new Date();
+            const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+            const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+            setFilters({
+                ...filters,
+                startDate: startOfMonth.toISOString().split('T')[0],
+                endDate: endOfMonth.toISOString().split('T')[0],
+            });
+
+            // Aplicar filtros iniciales (mes actual)
+            const initialFilteredData = data.filter((item) => {
+                const itemDate = new Date(item.date);
+                return itemDate >= startOfMonth && itemDate <= endOfMonth;
+            });
+
+            setFilteredData(initialFilteredData);  // Inicialmente los datos filtrados por el mes actual
+
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+
+    // Obtener los datos al cargar la página
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     // Función para manejar cambios en los filtros
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -57,7 +103,7 @@ const ReportPage: React.FC = () => {
 
     // Función para aplicar los filtros
     const applyFilters = () => {
-        let data = sampleData;
+        let data = allData;
 
         // Filtro por rango de fechas
         if (filters.startDate) {
@@ -88,19 +134,51 @@ const ReportPage: React.FC = () => {
         setFilteredData(data);
     };
 
+       // Limpiar los filtros y aplicar el filtro por defecto (mes actual)
+       const clearFilters = () => {
+        // Establecer los filtros al mes actual
+        const currentDate = new Date();
+        const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+        // Restablecer los filtros a las fechas del mes actual
+        setFilters({
+            startDate: startOfMonth.toISOString().split('T')[0], // Inicio del mes actual
+            endDate: endOfMonth.toISOString().split('T')[0], // Fin del mes actual
+            projectId: '',
+            userName: '',
+            minAmount: '',
+            maxAmount: '',
+        });
+    };
+
+    // Cuando se actualizan los filtros, aplicamos los filtros automáticamente
+    useEffect(() => {
+        applyFilters();
+    }, [filters]);  // Aplicamos los filtros cuando el estado 'filters' cambie
+
+    
+
     // Exportar a PDF
     const exportToPDF = () => {
         const doc = new jsPDF();
-        doc.text("Informe de Actividades", 10, 10);
+        // Título centrado
+        const title = "Informe de Actividades";
+        const pageWidth = doc.internal.pageSize.getWidth(); // Obtiene el ancho de la página
+        const titleWidth = doc.getStringUnitWidth(title) * doc.internal.getFontSize() / doc.internal.scaleFactor; // Calcula el ancho del título
+        const titleX = (pageWidth - titleWidth) / 2; // Calcula la posición X para centrar el título
+        const titleY = 10; // Posición Y
+
+        doc.text(title, titleX, titleY); // Dibuja el título centrado
 
         autoTable(doc, {
-            head: [["Usuario", "Árboles Plantados", "Proyecto", "Fecha", "Monto"]],
+            head: [["Fecha", "Proyecto", "Usuario", "Árboles Plantados", "Monto"]],
             body: filteredData.map((entry) => [
-                entry.user.userName,
-                entry.amount,
-                entry.project.name,
                 new Date(entry.date).toLocaleDateString(),
-                `$${entry.amount}`,
+                entry.project.name,
+                entry.user.userName,
+                entry.quantity,
+                `$ ${entry.amount}`,
             ]),
         });
 
@@ -150,13 +228,14 @@ const ReportPage: React.FC = () => {
             <h1 className="text-2xl pl-10 pt-5 font-Poppins font-bold">Informe de Actividades</h1>
 
             {/* Filtros */}
-            <div className="filters">
+            <div className="mb-4 space-y-2">
                 <input
                     type="date"
                     name="startDate"
                     value={filters.startDate}
                     onChange={handleFilterChange}
                     placeholder="Fecha de inicio"
+                    className="border border-gray-300 px-4 py-2 rounded-md"
                 />
                 <input
                     type="date"
@@ -164,18 +243,23 @@ const ReportPage: React.FC = () => {
                     value={filters.endDate}
                     onChange={handleFilterChange}
                     placeholder="Fecha de fin"
+                    className="border border-gray-300 px-4 py-2 rounded-md"
                 />
                 <select
                     name="projectId"
                     value={filters.projectId}
                     onChange={handleFilterChange}
+                    className="border border-gray-300 px-4 py-2 rounded-md"
                 >
                     <option value="">Seleccionar Proyecto</option>
-                    {[...new Set(sampleData.map((d) => d.project))].map((project) => (
-                        <option key={project.id} value={project.id}>
-                            {project.name}
-                        </option>
-                    ))}
+                    {[...new Set(filteredData
+                        .map((d) => d.project))]
+                        .filter((value, index, self) => self.findIndex((p) => p.id === value.id) === index) // Elimina duplicados
+                        .map((project) => (
+                            <option key={project.id} value={project.id}>
+                                {project.name}
+                            </option>
+                        ))}
                 </select>
                 <input
                     type="text"
@@ -183,6 +267,7 @@ const ReportPage: React.FC = () => {
                     value={filters.userName}
                     onChange={handleFilterChange}
                     placeholder="Nombre de Usuario"
+                    className="border border-gray-300 px-4 py-2 rounded-md"
                 />
                 <input
                     type="number"
@@ -190,6 +275,7 @@ const ReportPage: React.FC = () => {
                     value={filters.minAmount}
                     onChange={handleFilterChange}
                     placeholder="Monto mínimo"
+                    className="border border-gray-300 px-4 py-2 rounded-md"
                 />
                 <input
                     type="number"
@@ -197,10 +283,12 @@ const ReportPage: React.FC = () => {
                     value={filters.maxAmount}
                     onChange={handleFilterChange}
                     placeholder="Monto máximo"
+                    className="border border-gray-300 px-4 py-2 rounded-md"
                 />
-                <button className="reportButtons" onClick={applyFilters}>Aplicar Filtros</button>
+                {/* <button className="reportButtons" onClick={applyFilters}>Aplicar Filtros</button> */}
+                <button className="reportButtons" onClick={clearFilters}>Limpiar Filtros</button>
             </div>
-            <div>
+            <div className="mt-4">
                 <button className="reportButtons" onClick={exportToPDF}>Exportar a PDF</button>
                 <button className="reportButtons" onClick={exportToCSV}>Exportar a CSV</button>
             </div>
