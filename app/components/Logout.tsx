@@ -14,11 +14,18 @@ export default function Logout() {
   const { data: session, status } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [initials, setInitials] = useState<string>("");
+  const [isAdmin, setIsAdmin] = useState(false); // Estado para el rol de administrador
   const router = useRouter();
 
   useEffect(() => {
+
+    console.log("Sesión:", session?.user);
     if (session?.user?.name) {
       setInitials(getUserInitials(session.user.name));
+    }
+    // Verificar si el usuario tiene el rol de administrador
+    if (session?.user?.roles?.includes("Administrador")) {
+      setIsAdmin(true);
     }
   }, [session?.user?.name]); // Dependencia en la sesión para actualizar al cambiar
 
@@ -57,12 +64,14 @@ export default function Logout() {
           >
             Perfil
           </button>
-          <button
-            onClick={handleInformeClick}
-            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
-          >
-            Informes
-          </button>
+          {isAdmin && (
+            <button
+              onClick={handleInformeClick}
+              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
+            >
+              Informes
+            </button>
+          )}
           <button
             onClick={handleLogout}
             className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"

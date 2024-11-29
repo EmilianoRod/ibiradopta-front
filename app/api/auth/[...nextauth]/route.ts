@@ -44,6 +44,13 @@ export const authOptions: AuthOptions = {
         token.refreshToken = account.refresh_token;
         token.expiresAt = account.expires_at;
         token.userName = profile?.name;
+        // Extraer los roles desde el perfil (si están disponibles)
+        const decodedAccessToken = JSON.parse(
+          Buffer.from(account.access_token.split(".")[1], "base64").toString()
+        );
+        token.roles = decodedAccessToken.realm_access?.roles || [];
+
+        return token;
         return token;
       }
 
@@ -76,7 +83,7 @@ export const authOptions: AuthOptions = {
       session.user = {
         ...session.user,
         id: token.id, // Añade el ID del usuario a la sesión
-        roles: token.realm_access?.roles || [], // Añade los roles del usuario a la sesión
+        roles: token.roles || [], // Añade los roles del usuario a la sesión
       };
       return session;
     },
