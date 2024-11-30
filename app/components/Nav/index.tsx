@@ -8,6 +8,7 @@ import RegisterButton from "../RegisterButton";
 import { useSession } from "next-auth/react";
 
 const Nav = () => {
+  
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -55,4 +56,3 @@ const Nav = () => {
 };
 
 export default Nav;
-
