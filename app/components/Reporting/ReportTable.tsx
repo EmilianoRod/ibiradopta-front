@@ -66,7 +66,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ data }) => {
           <tbody>
             {data.map((entry) => (
               <tr key={entry.id} className="hover:bg-gray-50">
-                <td className="px-4 py-2 border-b">{new Date(entry.date).toLocaleDateString()}</td>
+                <td className="px-4 py-2 border-b">{new Date(entry.date).toLocaleDateString('es-UY',{ timeZone: 'UTC' })}</td>
                 <td className="px-4 py-2 border-b">{entry.project.name}</td>
                 <td className="px-4 py-2 border-b">{entry.user.userName}</td>
                 <td className="px-4 py-2 text-center border-b">{entry.quantity}</td>

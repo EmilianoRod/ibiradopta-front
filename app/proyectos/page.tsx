@@ -8,7 +8,7 @@ interface Project {
   id: number;
   name: string;
   description: string;
-  videoUrl: string; // Ruta del video
+  imageUrl: string; // Ruta del video
   location: string;
   price: number;
   isFinished: number; // 0 o 1
@@ -113,7 +113,7 @@ const Projects: React.FC = () => {
               {/* Video */}
               <video
                 className="w-full h-full object-cover rounded-lg"
-                src={project.videoUrl}
+                src={project.imageUrl}
                 ref={(el) => (videoRefs.current[index] = el!)} // Asignar referencia al video
                 loop
                 muted={index !== currentIndex} // Solo el video seleccionado tendrá sonido

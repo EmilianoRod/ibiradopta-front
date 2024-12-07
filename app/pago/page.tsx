@@ -14,6 +14,7 @@ interface Project {
   endDate: string; // Fecha en formato string (ISO 8601: "yyyy-mm-dd")
   isFinished: number; // 0 o 1
   price: number;
+  images: { imageUrl: string; imageOrder: number }[]; // Lista de imágenes
 }
 
 function ApoyarCard() {
@@ -119,6 +120,10 @@ function ApoyarCard() {
     return <div>Cargando...</div>;
   }
 
+  // Lógica para mostrar la imagen
+  const selectedImage = project.images.find(img => img.imageOrder === 1)?.imageUrl || project.images[0]?.imageUrl || '/default-image.jpg';
+
+
   return (
     <div
       className="flex justify-center items-center min-h-screen bg-gray-100 py-12 px-4"
@@ -128,7 +133,7 @@ function ApoyarCard() {
         <h2 className="text-xl font-bold text-center mb-6">{project.name}</h2>
         <p className="text-sm mb-4">{project.description}</p>
         <img
-          src={project.imageUrl}
+          src={selectedImage}
           alt={project.name}
           className="w-full h-40 object-cover mb-4 rounded-md"
         />
@@ -170,6 +175,13 @@ function ApoyarCard() {
           onClick={handleRedireccion}
         >
           Ir a Pagar
+        </button>
+        {/* Botón Volver */}
+        <button
+          className="w-full px-6 py-3 bg-gray-600 text-white rounded-full mt-4 hover:bg-gray-700"
+          onClick={() => router.back()}
+        >
+          Volver
         </button>
       </div>
     </div>

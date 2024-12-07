@@ -135,7 +135,9 @@ const ReportPage: React.FC = () => {
         }
 
         setFilteredData(data);
-    };
+        
+    }
+   
 
     // Limpiar los filtros y aplicar el filtro por defecto (mes actual)
     const clearFilters = () => {
