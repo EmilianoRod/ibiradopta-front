@@ -68,10 +68,18 @@ module.exports = {
         //   'Noto Color Emoji',
         // ],
       },
+      keyframes: {
+        fadeIn: {
+          from: { opacity: "0", transform: "translateY(100px)", filter: "blur(33px)" },
+          to: { opacity: "1", transform: "translateY(0)", filter: "blur(0)" },
+        },
+      },
+      animation: {
+        "fade-in": "fadeIn 1s ease-in-out forwards",
+        "fade-in-delay": "fadeIn 1s ease-in-out 0.3s forwards",
+        "fade-in-delay-long": "fadeIn 1s ease-in-out 0.6s forwards",
+      },
     },
   },
   plugins: [],
 };
-
-
-
