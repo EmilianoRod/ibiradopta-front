@@ -50,7 +50,7 @@ export default function Logout() {
 
       {/* Menú desplegable */}
       {isMenuOpen && (
-        <div className="absolute left-full top-0 mt-2 w-40 bg-white border rounded-md shadow-lg z-10">
+        <div className="absolute left-0 mt-12 w-40 bg-white border rounded-md shadow-lg z-10">
           <button
             onClick={handleProfileClick}
             className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"

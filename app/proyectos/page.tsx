@@ -15,7 +15,7 @@ function Projects() {
       image: "/quebrada-cuervos.jpg",
       alt: "Parque Nacional Quebrada de los Cuervos",
       description:
-        "Iniciativa para plantar 5,000 árboles nativos en el parque. Destinada a recuperar los bosques nativos para proteger las fuentes de agua y la fauna local.<br><br>" +
+        "Iniciativa para plantar 5.000 árboles nativos en el parque. Destinada a recuperar los bosques nativos para proteger las fuentes de agua y la fauna local.<br><br>" +
         "Lugar: Treinta y Tres, Uruguay.<br>" +
         "Fecha finalización: 15/05/2025",
     },
@@ -24,7 +24,7 @@ function Projects() {
       image: "/rio-santa-lucia.jpg",
       alt: "Cuenca del Río Santa Lucía",
       description:
-        "Iniciativa para reforestar la cuenca del Río Santa Lucía mediante la plantación de 3,500 árboles nativos. El objetivo es mejorar la calidad del agua, restaurar los ecosistemas y fomentar la biodiversidad en la región.<br><br>" +
+        "Iniciativa para reforestar la cuenca del Río Santa Lucía mediante la plantación de 3.500 árboles nativos. El objetivo es mejorar la calidad del agua, restaurar los ecosistemas y fomentar la biodiversidad en la región.<br><br>" +
         "Lugar: Canelones, Uruguay.<br>" +
         "Fecha finalización: 10/08/2025.",
     },
@@ -33,7 +33,7 @@ function Projects() {
       image: "/sierras-animas.jpg",
       alt: "Sierra de las Ánimas",
       description:
-        "Proyecto para plantar 4,000 árboles autóctonos en la Sierra de las Ánimas. La iniciativa busca restaurar los suelos degradados, fortalecer los corredores biológicos y proteger las especies endémicas de la región.<br><br>" +
+        "Proyecto para plantar 4.000 árboles autóctonos en la Sierra de las Ánimas. La iniciativa busca restaurar los suelos degradados, fortalecer los corredores biológicos y proteger las especies endémicas de la región.<br><br>" +
         "Lugar: Maldonado, Uruguay.<br>" +
         "Fecha finalización: 20/11/2025.",
     },
