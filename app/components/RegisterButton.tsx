@@ -6,7 +6,7 @@ export default function RegisterButton() {
       console.log(+"/n url"+ keycloakRegistrationUrl)
       window.location.href = keycloakRegistrationUrl;
     };
-    
+
 
     return (
       <button
