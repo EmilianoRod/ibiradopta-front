@@ -1,7 +1,8 @@
 import React from 'react';
+import generatePDF from './generatePDF';
 
 interface Payment {
-    id: string;
+    id: number;
     date: string;
     amount: string;
     method: string;
@@ -13,6 +14,8 @@ interface PaymentsTableProps {
 }
 
 const PaymentsTable: React.FC<PaymentsTableProps> = ({ payments }) => {
+
+
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-x-auto">
             <table className="min-w-full text-left text-sm">
@@ -23,6 +26,7 @@ const PaymentsTable: React.FC<PaymentsTableProps> = ({ payments }) => {
                         <th className="py-2 px-4">Monto</th>
                         <th className="py-2 px-4">Método</th>
                         <th className="py-2 px-4">Estado</th>
+                        <th className="py-2 px-4">Acción</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,6 +43,18 @@ const PaymentsTable: React.FC<PaymentsTableProps> = ({ payments }) => {
                                     }`}
                             >
                                 {payment.status}
+                            </td>
+                            <td className="py-2 px-4">
+                                <button
+                                    onClick={() => generatePDF(payment)}
+                                    disabled={payment.status !== "Completado"}
+                                    className={`py-1 px-3 rounded ${payment.status === "Completado"
+                                        ? "bg-primary-500 text-white hover:bg-primary-600"
+                                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                        }`}
+                                >
+                                    Descargar Factura
+                                </button>
                             </td>
                         </tr>
                     ))}

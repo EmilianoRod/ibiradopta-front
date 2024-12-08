@@ -1,0 +1,24 @@
+/* Mover puntos de paginación */
+.swiper-pagination {
+    margin-top: 20px; /* Ajusta según sea necesario */
+}
+
+/* Personalizar flechas */
+.swiper-button-next,
+.swiper-button-prev {
+    color: #2d5700; /* Cambia el color de las flechas */
+    width: 40px; /* Ajusta el tamaño */
+    height: 40px;
+}
+
+.swiper-button-next {
+    right: 30px; /* Mueve la flecha derecha */
+}
+
+.swiper-button-prev {
+    left: -20px; /* Mueve la flecha izquierda */
+}
+
+
+
+/* No pude hacer que quede bien las felchas del carrousel usando este archivo, no esta siendo usado */

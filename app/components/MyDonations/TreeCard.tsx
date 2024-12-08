@@ -6,13 +6,14 @@ import Link from 'next/link';
 import React from 'react';
 
 interface TreeCardProps {
+    id: number;
     imageSrc: string;
     title: string;
     adoptionDate: string;
     location: string;
 }
 
-const TreeCard: React.FC<TreeCardProps> = ({ imageSrc, title, adoptionDate, location }) => {
+const TreeCard: React.FC<TreeCardProps> = ({ id, imageSrc, title, adoptionDate, location }) => {
     return (
         <div className="bg-primary-100 rounded-lg shadow-lg p-6 max-w-md mx-auto">
             <div className="relative h-64 w-full mb-3">
@@ -33,7 +34,7 @@ const TreeCard: React.FC<TreeCardProps> = ({ imageSrc, title, adoptionDate, loca
                 Ubicación: {location}
             </p>
             <Link
-                href={`/trees/${title.toLowerCase().replace(/ /g, '-')}`}
+                href={`/trees/${id}`}
                 className="mt-4 bg-primary-500 text-primary-50 py-3 px-5 rounded hover:bg-primary-600 block text-center"
             >
                 Ver más detalles

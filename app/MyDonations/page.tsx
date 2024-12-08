@@ -1,8 +1,8 @@
 "use client";
 
+import AdoptedTreesCarousel from '../components/MyDonations/AdoptedTreesCarousel';
 import PaymentsTable from '../components/MyDonations/PaymentsTable';
 import React from 'react';
-import TreeCard from '../components/MyDonations/TreeCard';
 
 const trees = [
     {
@@ -33,39 +33,46 @@ const trees = [
         adoptionDate: '2023-06-20',
         location: 'Bariloche, Argentina',
     },
+    {
+        id: 5,
+        imageSrc: '/recienPlantado.jpg',
+        title: 'Pino Patagónico',
+        adoptionDate: '2023-06-20',
+        location: 'Bariloche, Argentina',
+    },
 ];
 
 const payments = [
     {
-        id: '12345',
+        id: 12345,
         date: '2023-05-12',
         amount: '$25.00',
         method: 'Tarjeta de Crédito',
         status: 'Completado',
     },
     {
-        id: '67890',
+        id: 67890,
         date: '2023-06-15',
         amount: '$50.00',
         method: 'PayPal',
         status: 'Pendiente',
     },
     {
-        id: '6782',
+        id: 6782,
         date: '2023-06-15',
         amount: '$50.00',
         method: 'PayPal',
         status: 'Pendiente',
     },
     {
-        id: '67640',
+        id: 67640,
         date: '2023-06-15',
         amount: '$50.00',
         method: 'PayPal',
         status: 'Pendiente',
     },
     {
-        id: '65490',
+        id: 65490,
         date: '2023-06-15',
         amount: '$50.00',
         method: 'PayPal',
@@ -90,19 +97,12 @@ const MyDonations = () => {
 
             {/* Main Content */}
             <main className="container mx-auto px-4 py-8">
+
                 {/* Adopted Trees Section */}
-                <section className="mb-8 animate-fade-in">
-                    <h2 className="text-xl font-Poppins font-semibold mb-4">Árboles Adoptados</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {trees.map((tree) => (
-                            <TreeCard
-                                key={tree.id}
-                                imageSrc={tree.imageSrc}
-                                title={tree.title}
-                                adoptionDate={tree.adoptionDate}
-                                location={tree.location}
-                            />
-                        ))}
+                <section className="mb-8 animate-fade-in w-full">
+                    <h2 className="text-xl font-Poppins font-semibold mb-4">Árboles Adoptados Por Vos</h2>
+                    <div className="w-full">
+                        <AdoptedTreesCarousel trees={trees} />
                     </div>
                 </section>
 
