@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { FaStar, FaRegStar, FaTimesCircle  } from "react-icons/fa";  // Importar íconos
+import { FaStar, FaRegStar, FaTimesCircle } from "react-icons/fa";  // Importar íconos
 
 // Define el tipo de los proyectos
 interface Project {
@@ -295,6 +295,7 @@ const ProjectManagement = () => {
                     <tr>
                         <th className="px-4 py-2">Nombre</th>
                         <th className="px-4 py-2">Descripción</th>
+                        <th className="px-4 py-2">Estado</th>
                         <th className="px-4 py-2">Acciones</th>
                     </tr>
                 </thead>
@@ -303,6 +304,13 @@ const ProjectManagement = () => {
                         <tr key={project.id}>
                             <td className="border px-4 py-2">{project.name}</td>
                             <td className="border px-4 py-2">{project.description}</td>
+                            <td className="border px-4 py-2">
+                                {project.isFinished ? (
+                                    <span className="text-green-500 font-bold">Finalizado</span>
+                                ) : (
+                                    <span className="text-red-500 font-bold">En Progreso</span>
+                                )}
+                            </td>
                             <td className="border px-4 py-2">
                                 <button
                                     className="bg-green-500 text-white p-2 rounded mr-2"
@@ -419,7 +427,7 @@ const ProjectManagement = () => {
                                             onClick={() => handleRemoveImage(imageUrl)}
                                             className="text-red-500"
                                         >
-                                            <FaTimesCircle  size={24} />
+                                            <FaTimesCircle size={24} />
                                         </button>
                                     </div>
                                 </div>
