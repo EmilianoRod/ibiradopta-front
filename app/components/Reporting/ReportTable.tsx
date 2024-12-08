@@ -50,12 +50,12 @@ const ReportTable: React.FC<ReportTableProps> = ({ data }) => {
 
 
   return (
-    <div className="flex space-x-4 mt-4">
+    <div className="flex space-x-4 mt-4 mx-4 mb-8">
       {/* Sección de la tabla */}
       <div className="flex-1 overflow-y-auto max-h-[500px]">
         <table className="min-w-full table-auto border-collapse">
           <thead>
-            <tr className="bg-gray-100">
+            <tr className="bg-yellow-500">
               <th className="px-4 py-2 text-left border-b">Fecha</th>
               <th className="px-4 py-2 text-left border-b">Nombre del Proyecto</th>
               <th className="px-4 py-2 text-left border-b">Usuario</th>
@@ -65,8 +65,8 @@ const ReportTable: React.FC<ReportTableProps> = ({ data }) => {
           </thead>
           <tbody>
             {data.map((entry) => (
-              <tr key={entry.id} className="hover:bg-gray-50">
-                <td className="px-4 py-2 border-b">{new Date(entry.date).toLocaleDateString()}</td>
+              <tr key={entry.id} className="hover:bg-yellow-50">
+                <td className="px-4 py-2 border-b">{new Date(entry.date).toLocaleDateString('es-UY',{timeZone:'UTC' })}</td>
                 <td className="px-4 py-2 border-b">{entry.project.name}</td>
                 <td className="px-4 py-2 border-b">{entry.user.userName}</td>
                 <td className="px-4 py-2 text-center border-b">{entry.quantity}</td>
@@ -77,7 +77,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ data }) => {
 
           {/* Fila de totales al final */}
           <tfoot>
-            <tr className="bg-gray-200 font-bold">
+            <tr className="bg-yellow-100 font-bold">
               <td className="px-4 py-2 text-center border-t" colSpan={3}>Totales</td>
               <td className="px-4 py-2 text-center border-t">{totalQuantity}</td>
               <td className="px-4 py-2 text-center border-t">{`$${totalAmount.toFixed(2)}`}</td>
@@ -87,12 +87,12 @@ const ReportTable: React.FC<ReportTableProps> = ({ data }) => {
       </div>
 
       {/* Sección de resumen tipo tabla con totales por proyecto */}
-      <div className="w-1/2 p-4 bg-gray-50 rounded-lg">
+      <div className="w-1/2 p-4 bg-yellow-500 rounded-lg">
         <h2 className="text-xl font-semibold mb-4">Resumen de Totales por Proyecto</h2>
         
         <table className="min-w-full table-auto border-collapse">
           <thead>
-            <tr className="bg-gray-100">
+            <tr className="bg-yellow-100">
               <th className="px-4 py-2 text-left border-b">Proyecto</th>
               <th className="px-4 py-2 text-left border-b">Árboles Plantados</th>
               <th className="px-4 py-2 text-left border-b">Monto</th>
@@ -100,7 +100,7 @@ const ReportTable: React.FC<ReportTableProps> = ({ data }) => {
           </thead>
           <tbody>
             {Object.keys(totalsByProject).map((projectName) => (
-              <tr key={projectName} className="hover:bg-gray-50">
+              <tr key={projectName} className="hover:bg-yellow-100">
                 <td className="px-4 py-2 border-b">{projectName}</td>
                 <td className="px-4 py-2 border-b">{totalsByProject[projectName].totalQuantity}</td>
                 <td className="px-4 py-2 border-b">{`$${totalsByProject[projectName].totalAmount.toFixed(2)}`}</td>

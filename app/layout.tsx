@@ -25,7 +25,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
               <main className="flex-grow">
                 {children}
               </main>
-              <Footer/>
+              <Footer/> 
             </div>
           </SessionGuard>
         </Providers>
