@@ -29,6 +29,7 @@ const ProjectManagement = () => {
         endDate: "",
         price: "",
         images: [] as File[],
+        videoUrl: "", // Campo para la URL del video
     });
     const [isUploading, setIsUploading] = useState(false);  // Estado para indicar si las imágenes están subiendo
     const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);  // Estado para el modal de la galería
@@ -60,6 +61,7 @@ const ProjectManagement = () => {
             location: newProject.location,  // Nuevo campo
             endDate: newProject.endDate,    // Nuevo campo
             price: newProject.price,        // Nuevo campo
+            imageUrl: newProject.videoUrl,  // Establecer la URL del video
             isFinished: 0,                  // Ajusta según tus necesidades
         };
 
@@ -90,7 +92,7 @@ const ProjectManagement = () => {
 
         if (res.ok) {
             setIsModalOpen(false);
-            setNewProject({ id: "", name: "", description: "", location: "", endDate: "", price: "", images: [] }); // Limpiar formulario
+            setNewProject({ id: "", name: "", description: "", location: "", endDate: "", price: "",videoUrl:"", images: [] }); // Limpiar formulario
             setSelectedProject(null)
             // Recargar los proyectos después de crear uno nuevo
             const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_GATEWAY_URL}/projects/getall`);
@@ -111,6 +113,7 @@ const ProjectManagement = () => {
             location: newProject.location,
             endDate: newProject.endDate,
             price: newProject.price,
+            imageUrl: newProject.videoUrl,  // Establecer la URL del video
             isFinished: selectedProject?.isFinished, // Mantener el estado si es necesario
         };
 
@@ -125,7 +128,7 @@ const ProjectManagement = () => {
 
         if (res.ok) {
             setIsModalOpen(false);
-            setNewProject({ id: "", name: "", description: "", location: "", endDate: "", price: "", images: [] });
+            setNewProject({ id: "", name: "", description: "", location: "", endDate: "", price: "",videoUrl:"", images: [] });
             setSelectedProject(null); // Limpiar el proyecto seleccionado
             // Recargar los proyectos después de la actualización
             const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_GATEWAY_URL}/projects/getall`);
@@ -145,6 +148,7 @@ const ProjectManagement = () => {
             location: project.location,
             endDate: project.endDate,
             price: project.price,
+            videoUrl: project.imageUrl,  // Establecer la URL del video
             images: [] // Deja las imágenes vacías porque no se editarán aquí
         });
         setIsModalOpen(true); // Abrir el modal para editar
@@ -170,7 +174,7 @@ const ProjectManagement = () => {
 
     const openCreateModal = () => {
         setSelectedProject(null); // Limpiar el proyecto seleccionado para crear uno nuevo
-        setNewProject({ id: "", name: "", description: "", location: "", endDate: "", price: "", images: [] }); // Limpiar formulario
+        setNewProject({ id: "", name: "", description: "", location: "", endDate: "", price: "",videoUrl:"", images: [] }); // Limpiar formulario
         setIsModalOpen(true);
     };
 
@@ -292,7 +296,7 @@ const ProjectManagement = () => {
 
             <table className="min-w-full mt-6 table-auto">
                 <thead>
-                    <tr>
+                    <tr className="bg-gray-100">
                         <th className="px-4 py-2">Nombre</th>
                         <th className="px-4 py-2">Descripción</th>
                         <th className="px-4 py-2">Estado</th>
@@ -367,18 +371,32 @@ const ProjectManagement = () => {
                             className="border p-2 w-full mb-4"
                         />
                         {/* Campo de Fecha de Finalización */}
-                        <input
-                            type="date"
-                            value={newProject.endDate}
-                            onChange={(e) => setNewProject({ ...newProject, endDate: e.target.value })}
-                            className="border p-2 w-full mb-4"
-                        />
+                        <div className="mb-4">
+                            <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">Fecha de Finalización</label>
+                            <input
+                                id="endDate"
+                                type="date"
+                                value={newProject.endDate}
+                                onChange={(e) => setNewProject({ ...newProject, endDate: e.target.value })}
+                                className="border p-2 w-full mt-1"
+                                placeholder="Selecciona la fecha en que se espera finalizar el proyecto"
+                            />
+                            <small className="text-gray-500 mt-1 block">Indica la fecha en que se espera finalizar el proyecto.</small>
+                        </div>
                         {/* Campo de Precio */}
                         <input
                             type="number"
                             placeholder="Precio por Árbol"
                             value={newProject.price}
                             onChange={(e) => setNewProject({ ...newProject, price: e.target.value })}
+                            className="border p-2 w-full mb-4"
+                        />
+                        {/* Campo de URL del Video */}
+                        <input
+                            type="url"
+                            placeholder="URL del Video"
+                            value={newProject.videoUrl}
+                            onChange={(e) => setNewProject({ ...newProject, videoUrl: e.target.value })}
                             className="border p-2 w-full mb-4"
                         />
                         {/* Solo mostrar el input de imágenes si estamos creando un proyecto */}
@@ -413,21 +431,21 @@ const ProjectManagement = () => {
                         <div className="grid grid-cols-3 gap-2">
                             {projectImages.map((imageUrl, index) => (
                                 <div key={index} className="relative">
-                                    <img src={imageUrl} alt={`image-${index}`} className="w-full h-32 object-cover mb-2" />
+                                    <img src={imageUrl} alt={`image-${index}`} className="w-full h-32 object-cover mb-2 rounded-lg" />
                                     <div className="absolute top-2 right-2 flex gap-2">
                                         {/* Estrella para imagen principal */}
                                         <button
                                             onClick={() => handleSetMainImage(imageUrl)}
-                                            className="text-yellow-500"
+                                            className="text-yellow-500 hover:text-yellow-700 cursor-pointer mr-12 "  // Ajusta la posición según tus necesidades
                                         >
-                                            {selectedImage === imageUrl ? <FaStar size={24} /> : <FaRegStar size={24} />}
+                                            {selectedImage === imageUrl ? <FaStar size={18} /> : <FaRegStar size={18} />}
                                         </button>
                                         {/* X roja para eliminar imagen */}
                                         <button
                                             onClick={() => handleRemoveImage(imageUrl)}
-                                            className="text-red-500"
+                                            className="text-red-500 hover:text-red-700 cursor-pointer top-2 right-2"
                                         >
-                                            <FaTimesCircle size={24} />
+                                            <FaTimesCircle size={18} />
                                         </button>
                                     </div>
                                 </div>
@@ -466,7 +484,7 @@ const ProjectManagement = () => {
                             multiple
                             onChange={handleAddImages}
                             disabled={isUploading}
-                            className="border p-2 w-full mt-4"
+                            className="border p-2 w-full mt-4 rounded"
                         />
                         <button
                             className="bg-blue-500 text-white p-2 rounded mt-4"

@@ -60,6 +60,13 @@ const Projects: React.FC = () => {
     });
   }, [currentIndex]);
 
+    // Asegurarse de que el primer video se reproduce al cargar
+    useEffect(() => {
+      if (projects.length > 0 && videoRefs.current[currentIndex]) {
+        videoRefs.current[currentIndex].play(); // Reproducir el primer video si no lo está haciendo
+      }
+    }, [projects]);
+
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % projects.length);
     window.scrollTo({ top: 0, behavior: "smooth" });
