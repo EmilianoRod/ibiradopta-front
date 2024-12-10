@@ -33,6 +33,11 @@ export default function Logout() {
     setIsMenuOpen(false);
   };
 
+  const handleProjectManagementClick = () => {
+    router.push("/admin/projects"); // Redirigir al administrador a la página de administración de proyectos
+    setIsMenuOpen(false);
+  };
+
   const handleInformeClick = () => {
     router.push("/report");
     setIsMenuOpen(false);
@@ -63,6 +68,14 @@ export default function Logout() {
           >
             Perfil
           </button>
+          {isAdmin && (
+            <button
+              onClick={handleProjectManagementClick}
+              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
+            >
+              Administración de Proyectos
+            </button>
+          )}
           {isAdmin && (
             <button
               onClick={handleInformeClick}
