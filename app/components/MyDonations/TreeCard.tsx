@@ -9,11 +9,20 @@ interface TreeCardProps {
     id: number;
     imageSrc: string;
     title: string;
-    adoptionDate: string;
+    endDate: string;
     location: string;
 }
 
-const TreeCard: React.FC<TreeCardProps> = ({ id, imageSrc, title, adoptionDate, location }) => {
+const TreeCard: React.FC<TreeCardProps> = ({ id, imageSrc, title, endDate, location }) => {
+    // Convertir endDate a un objeto Date para comparación
+    const endDateObj = new Date(endDate);
+    const today = new Date();
+
+    // Comparar si la fecha endDate es pasada o no
+    const isPast = endDateObj < today;
+
+    // Determinar el texto que se mostrará dependiendo de la fecha
+    const fechaTexto = isPast ? 'Finalizó el' : 'Finaliza el';
     return (
         <div className="bg-primary-100 rounded-lg shadow-lg p-6 max-w-md mx-auto">
             <div className="relative h-64 w-full mb-3">
@@ -22,13 +31,14 @@ const TreeCard: React.FC<TreeCardProps> = ({ id, imageSrc, title, adoptionDate, 
                     alt={title}
                     fill
                     className="object-cover rounded-md"
+                    priority
                 />
             </div>
             <h3 className="text-xl font-Righteous font-bold text-primary-900 mb-2">
                 {title}
             </h3>
             <p className="text-base text-gray-600 dark:text-gray-300 mb-1">
-                Adoptado el: {adoptionDate}
+            {fechaTexto}: {endDate}
             </p>
             <p className="text-base text-gray-600 dark:text-gray-300 mb-4">
                 Ubicación: {location}
