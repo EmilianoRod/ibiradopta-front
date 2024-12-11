@@ -3,8 +3,8 @@
 import AdoptedTreesCarousel from '../components/MyDonations/AdoptedTreesCarousel';
 import PaymentsTable from '../components/MyDonations/PaymentsTable';
 import React, { useEffect, useState } from 'react'
-import { fetchPayments } from '../utils/fetchPayments';
 import { useSession } from "next-auth/react";
+import { fetchPaymentsByUserId } from '../utils/fetchPaymentsByUserId';
 
 const MyDonations = () => {
 
@@ -19,7 +19,7 @@ const MyDonations = () => {
             if (accessToken && session?.user.id) {
                 try {
                     // Fetch de pagos
-                    const result = await fetchPayments(accessToken, { userId: session.user.id });
+                    const result = await fetchPaymentsByUserId(accessToken, session.user.id);
                     setPayments(result); // Almacena los pagos en el estado
 
                     // Procesar los proyectos únicos
