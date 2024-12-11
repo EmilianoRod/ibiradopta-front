@@ -8,7 +8,7 @@ interface Project {
   id: number;
   name: string;
   description: string;
-  videoUrl: string; // Ruta del video
+  imageUrl: string; // Ruta del video
   location: string;
   price: number;
   isFinished: number; // 0 o 1
@@ -36,7 +36,7 @@ const FinishedProjects: React.FC = () => {
 
         setProjects(inactiveProjects);
 
-        if (inactiveProjects.length > 3) {
+        if (inactiveProjects.length >= 3) {
           setShowArrows(true);
         }
       } catch (error) {
@@ -113,7 +113,7 @@ const FinishedProjects: React.FC = () => {
               {/* Video */}
               <video
                 className="w-full h-full object-cover rounded-lg"
-                src={project.videoUrl}
+                src={project.imageUrl}
                 ref={(el) => (videoRefs.current[index] = el!)} // Asignar referencia al video
                 loop
                 muted={index !== currentIndex} // Solo el video seleccionado tendrá sonido
@@ -131,9 +131,10 @@ const FinishedProjects: React.FC = () => {
                   <button
                     className="mt-4 px-5 py-2 bg-gray-700 text-white rounded-md cursor-pointer"
                     // onClick={handleApoyarClick}
-                  >
-                    Ver más
-                  </button>
+                    // images: { imageUrl: string; imageOrder: number }[]; // Lista de imágenes
+                  > 
+                    Ver más 
+                  </button> 
                 </div>
               )}
             </div>
