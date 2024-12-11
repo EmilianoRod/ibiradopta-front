@@ -8,18 +8,18 @@ interface Project {
   id: number;
   name: string;
   description: string;
-  imageUrl: string; // Ruta del video
+  videoUrl: string;
   location: string;
   price: number;
-  isFinished: number; // 0 o 1
+  isFinished: number;
 }
 
 const Projects: React.FC = () => {
   const { data: session } = useSession();
   const router = useRouter();
-  const [projects, setProjects] = useState<Project[]>([]); // Estado para los proyectos
+  const [projects, setProjects] = useState<Project[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [showArrows, setShowArrows] = useState(false); // Para mostrar flechas solo si hay más de 3 proyectos
+  const [showArrows, setShowArrows] = useState(false);
   const videoRefs = useRef<HTMLVideoElement[]>([]);
 
   useEffect(() => {
@@ -35,10 +35,7 @@ const Projects: React.FC = () => {
         );
 
         setProjects(activeProjects);
-
-        if (activeProjects.length > 3) {
-          setShowArrows(true);
-        }
+        setShowArrows(activeProjects.length > 3);
       } catch (error) {
         console.error("Error al obtener proyectos:", error);
       }
@@ -51,32 +48,23 @@ const Projects: React.FC = () => {
     videoRefs.current.forEach((video, index) => {
       if (video) {
         if (index === currentIndex) {
-          video.play(); // Reproduce el video seleccionado
+          video.play();
         } else {
-          video.pause(); // Pausa los demás videos
-          video.currentTime = 0; // Reinicia los videos no seleccionados
+          video.pause();
+          video.currentTime = 0;
         }
       }
     });
   }, [currentIndex]);
 
-    // Asegurarse de que el primer video se reproduce al cargar
-    useEffect(() => {
-      if (projects.length > 0 && videoRefs.current[currentIndex]) {
-        videoRefs.current[currentIndex].play(); // Reproducir el primer video si no lo está haciendo
-      }
-    }, [projects]);
-
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % projects.length);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? projects.length - 1 : prevIndex - 1
     );
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleApoyarClick = () => {
@@ -92,56 +80,74 @@ const Projects: React.FC = () => {
   };
 
   return (
-    <div className="relative w-[1200px] h-[700px] bg-gray-100 shadow-[0_30px_50px_rgba(219,219,219,1)] mx-auto my-20">
+    <div className="relative w-full max-w-7xl h-[50vh] lg:h-[700px] bg-gray-100 shadow-lg mx-auto my-10">
       {/* Carrusel */}
       <div className="relative h-full">
         {projects.map((project, index) => {
-          const zIndex =
-            index === currentIndex
-              ? 50 // Video actual
-              : (index + projects.length - currentIndex) % projects.length === 1
-              ? 40 // Video siguiente
-              : 60; // Videos restantes
+          const isMainVideo = index === currentIndex;
+          const isNextVideo =
+            (index + projects.length - currentIndex) % projects.length === 1;
+          const isSecondNextVideo =
+            (index + projects.length - currentIndex) % projects.length === 2;
+
+          const zIndex = isMainVideo
+            ? 20
+            : isNextVideo
+            ? 40
+            : isSecondNextVideo
+            ? 60
+            : 20;
 
           return (
             <div
               key={project.id}
-              className={`absolute w-[200px] h-[300px] top-1/2 transform -translate-y-1/2 rounded-2xl shadow-[0_30px_50px_rgba(80,80,80,1)] transition-all duration-500 ${
-                currentIndex === index
+              className={`absolute top-1/2 transform -translate-y-1/2 rounded-2xl shadow-lg transition-all duration-500 ${
+                isMainVideo
                   ? "left-0 w-full h-full rounded-none"
-                  : currentIndex === (index + 1) % projects.length
-                  ? "left-2/3"
-                  : currentIndex === (index + 2) % projects.length
-                  ? "left-[calc(50%+440px)]"
-                  : "left-[calc(50%+440px)] opacity-0"
+                  : isNextVideo
+                  ? "left-2/3 w-[200px] h-[300px]"
+                  : isSecondNextVideo
+                  ? "left-[calc(50%+440px)] w-[200px] h-[300px]"
+                  : "opacity-0"
               }`}
               style={{ zIndex }}
             >
               {/* Video */}
               <video
-                className="w-full h-full object-cover rounded-lg"
-                src={project.imageUrl}
-                ref={(el) => (videoRefs.current[index] = el!)} // Asignar referencia al video
+                className={`w-full h-full object-cover ${
+                  isMainVideo ? "rounded-none" : "rounded-lg"
+                }`}
+                src={project.videoUrl}
+                ref={(el) => (videoRefs.current[index] = el!)}
                 loop
-                muted={index !== currentIndex} // Solo el video seleccionado tendrá sonido
+                muted={!isMainVideo}
               ></video>
 
               {/* Contenido */}
-              {currentIndex === index && (
-                <div className="absolute top-1/2 left-[100px] w-[300px] text-left text-gray-200 transform -translate-y-1/2 font-sans">
-                  <div className="text-4xl uppercase font-bold">
-                    {project.name}
-                  </div>
-                  <div className="mt-2 mb-5">{project.description}</div>
-                  <div className="mt-2 text-sm">Ubicación: {project.location}</div>
-                  <div className="text-sm">Precio: ${project.price}</div>
-                  <button
-                    className="mt-4 px-5 py-2 bg-gray-700 text-white rounded-md cursor-pointer"
-                    onClick={handleApoyarClick}
-                  >
-                    Apoyar
-                  </button>
+              {isMainVideo && (
+                <div
+                className="absolute top-1/2 left-[5%] md:left-[10%] w-[80%] md:w-[300px] text-left text-gray-200 transform -translate-y-1/2 font-sans bg-black bg-opacity-50 p-2 rounded-lg"
+              >
+                <div className="text-xl sm:text-2xl md:text-4xl uppercase font-bold">
+                  {project.name}
                 </div>
+                <div className="mt-2 mb-5 text-sm md:text-base">
+                  {project.description}
+                </div>
+                <div className="mt-2 text-xs md:text-sm">
+                  Ubicación: {project.location}
+                </div>
+                <div className="text-xs md:text-sm">
+                  Precio: ${project.price}
+                </div>
+                <button
+                  className="mt-4 px-4 py-2 bg-gray-700 text-white rounded-md cursor-pointer hover:bg-gray-600"
+                  onClick={handleApoyarClick}
+                >
+                  Apoyar
+                </button>
+              </div>
+              
               )}
             </div>
           );
@@ -151,18 +157,18 @@ const Projects: React.FC = () => {
       {/* Botones de navegación */}
       {showArrows && (
         <div
-          className="absolute bottom-5 w-full flex justify-between px-10"
-          style={{ zIndex: 100 }} // Asegura que los botones estén delante de los videos
+          className="absolute bottom-5 w-full flex justify-between px-5 sm:px-10"
+          style={{ zIndex: 100 }}
         >
           <button
-            className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-600"
-            onClick={handleNext}
+            className="bg-gray-700 text-white px-3 sm:px-4 py-1 sm:py-2 rounded hover:bg-gray-600"
+            onClick={handlePrev}
           >
             Anterior
           </button>
           <button
-            className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-600"
-            onClick={handlePrev}
+            className="bg-gray-700 text-white px-3 sm:px-4 py-1 sm:py-2 rounded hover:bg-gray-600"
+            onClick={handleNext}
           >
             Siguiente
           </button>
