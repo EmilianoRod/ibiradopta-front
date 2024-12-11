@@ -3,10 +3,29 @@ import generatePDF from './generatePDF';
 
 interface Payment {
     id: number;
+    quantity: number;
+    amount: number;
     date: string;
-    amount: string;
-    method: string;
-    status: string;
+    userId: string;
+    project: Project;
+    user: User;
+}
+export interface Project {
+    id: number;
+    name: string;
+    description: string;
+    imageUrl: string;
+    location: string;
+    endDate: string;
+    price: number;
+    isFinished: number;
+    images: { imageUrl: string; imageOrder: number }[]; // Lista de imágenes
+}
+
+export interface User {
+    id: number;
+    userName: string;
+    email: string;
 }
 
 interface PaymentsTableProps {
@@ -23,9 +42,9 @@ const PaymentsTable: React.FC<PaymentsTableProps> = ({ payments }) => {
                     <tr>
                         <th className="py-2 px-4">ID de Pago</th>
                         <th className="py-2 px-4">Fecha</th>
+                        <th className="py-2 px-4">Arboles</th>
                         <th className="py-2 px-4">Monto</th>
-                        <th className="py-2 px-4">Método</th>
-                        <th className="py-2 px-4">Estado</th>
+                        <th className="py-2 px-4">Proyecto</th>
                         <th className="py-2 px-4">Acción</th>
                     </tr>
                 </thead>
@@ -34,24 +53,16 @@ const PaymentsTable: React.FC<PaymentsTableProps> = ({ payments }) => {
                         <tr key={payment.id} className="border-b border-gray-300 dark:border-gray-700">
                             <td className="py-2 px-4">{payment.id}</td>
                             <td className="py-2 px-4">{payment.date}</td>
+                            <td className="py-2 px-4">{payment.quantity}</td>
                             <td className="py-2 px-4">{payment.amount}</td>
-                            <td className="py-2 px-4">{payment.method}</td>
-                            <td
-                                className={`py-2 px-4 ${payment.status === 'Completado'
-                                    ? 'text-primary-600'
-                                    : 'text-red-600'
-                                    }`}
-                            >
-                                {payment.status}
-                            </td>
+                            <td className="py-2 px-4">{payment.project.name}</td>
                             <td className="py-2 px-4">
                                 <button
                                     onClick={() => generatePDF(payment)}
-                                    disabled={payment.status !== "Completado"}
-                                    className={`py-1 px-3 rounded ${payment.status === "Completado"
-                                        ? "bg-primary-500 text-white hover:bg-primary-600"
-                                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                        }`}
+                                    //disabled={payment.status !== "Completado"}
+                                    className={`py-1 px-3 rounded bg-primary-500 text-white hover:bg-primary-600`
+
+                                    }
                                 >
                                     Descargar Factura
                                 </button>

@@ -5,21 +5,25 @@ export interface Project {
     imageUrl: string;
     location: string;
     endDate: string;
+    price: number;
     isFinished: number;
-}
-
-export interface User {
-    id: string;
-    userName: string;
-    email: string;
+    images: { imageUrl: string; imageOrder: number }[]; // Lista de imágenes
 }
 
 export interface Payment {
     id: number;
+    quantity: number;
     amount: number;
     date: string;
-    user: User;
+    userId: string;
     project: Project;
+    user: User;
+}
+
+export interface User {
+    id: number;
+    userName: string;
+    email: string;
 }
 
 interface PaymentFilters {
@@ -37,7 +41,7 @@ export async function fetchPayments(token: string, filters: PaymentFilters = {})
     if (filters.startDate) query.append("startDate", filters.startDate);
     if (filters.endDate) query.append("endDate", filters.endDate);
 
-    const url = `http://localhost:9090/payments/filters?${query.toString()}`;
+    const url = `${process.env.NEXT_PUBLIC_GATEWAY_URL}/payments/filters?${query.toString()}`;
 
     const response = await fetch(url, {
         method: 'GET',
@@ -49,5 +53,8 @@ export async function fetchPayments(token: string, filters: PaymentFilters = {})
     if (!response.ok) {
         throw new Error('Failed to fetch payments');
     }
-    return await response.json();
+
+    const data = await response.json();
+
+    return data;
 }

@@ -15,16 +15,16 @@ interface Tree {
     id: number;
     imageSrc: string;
     title: string;
-    adoptionDate: string;
+    endDate: string;
     location: string;
 }
 
 interface AdoptedTreesCarouselProps {
-    trees: Tree[];
+    projectsList: ProjectList[];
 }
 
 
-const AdoptedTreesCarousel: React.FC<AdoptedTreesCarouselProps> = ({ trees }) => {
+const AdoptedTreesCarousel: React.FC<AdoptedTreesCarouselProps> = ({ projectsList }) => {
     return (
         <section className="mb-12 w-full animate-fade-in">
             <Swiper
@@ -40,14 +40,14 @@ const AdoptedTreesCarousel: React.FC<AdoptedTreesCarouselProps> = ({ trees }) =>
                 }}
                 className="swiper-container"
             >
-                {trees.map((tree) => (
-                    <SwiperSlide key={tree.id} className="w-auto">
+                {projectsList.map((project) => (
+                    <SwiperSlide key={project.id} className="w-auto">
                         <TreeCard
-                            id={tree.id}
-                            imageSrc={tree.imageSrc}
-                            title={tree.title}
-                            adoptionDate={tree.adoptionDate}
-                            location={tree.location}
+                            id={project.id}
+                            imageSrc={project.imageUrl}
+                            title={project.name}
+                            endDate={project.date}
+                            location={project.location}
                         />
                     </SwiperSlide>
                 ))}

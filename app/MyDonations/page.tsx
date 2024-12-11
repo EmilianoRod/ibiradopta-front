@@ -2,96 +2,67 @@
 
 import AdoptedTreesCarousel from '../components/MyDonations/AdoptedTreesCarousel';
 import PaymentsTable from '../components/MyDonations/PaymentsTable';
-import React from 'react';
-
-const trees = [
-    {
-        id: 1,
-        imageSrc: '/recienPlantado.jpg',
-        title: 'Roble Andino',
-        adoptionDate: '2023-05-12',
-        location: 'Bogotá, Colombia',
-    },
-    {
-        id: 2,
-        imageSrc: '/recienPlantado.jpg',
-        title: 'Pino Patagónico',
-        adoptionDate: '2023-06-20',
-        location: 'Bariloche, Argentina',
-    },
-    {
-        id: 3,
-        imageSrc: '/recienPlantado.jpg',
-        title: 'Pino Patagónico',
-        adoptionDate: '2023-06-20',
-        location: 'Bariloche, Argentina',
-    },
-    {
-        id: 4,
-        imageSrc: '/recienPlantado.jpg',
-        title: 'Pino Patagónico',
-        adoptionDate: '2023-06-20',
-        location: 'Bariloche, Argentina',
-    },
-    {
-        id: 5,
-        imageSrc: '/recienPlantado.jpg',
-        title: 'Pino Patagónico',
-        adoptionDate: '2023-06-20',
-        location: 'Bariloche, Argentina',
-    },
-];
-
-const payments = [
-    {
-        id: 12345,
-        date: '2023-05-12',
-        amount: '$25.00',
-        method: 'Tarjeta de Crédito',
-        status: 'Completado',
-    },
-    {
-        id: 67890,
-        date: '2023-06-15',
-        amount: '$50.00',
-        method: 'PayPal',
-        status: 'Pendiente',
-    },
-    {
-        id: 6782,
-        date: '2023-06-15',
-        amount: '$50.00',
-        method: 'PayPal',
-        status: 'Pendiente',
-    },
-    {
-        id: 67640,
-        date: '2023-06-15',
-        amount: '$50.00',
-        method: 'PayPal',
-        status: 'Pendiente',
-    },
-    {
-        id: 65490,
-        date: '2023-06-15',
-        amount: '$50.00',
-        method: 'PayPal',
-        status: 'Pendiente',
-    },
-
-];
-
-
+import React, { useEffect, useState } from 'react'
+import { fetchPayments } from '../utils/fetchPayments';
+import { useSession } from "next-auth/react";
 
 const MyDonations = () => {
+
+    const { data: session } = useSession();
+    const [payments, setPayments] = useState([]); // Estado para almacenar los pagos
+    const [projects, setProjects] = useState([]); // Estado para almacenar proyectos únicos
+    const accessToken = session?.accessToken;
+
+    // Obtiene los pagos del usuario
+    useEffect(() => {
+        const fetchData = async () => {
+            if (accessToken && session?.user.id) {
+                try {
+                    // Fetch de pagos
+                    const result = await fetchPayments(accessToken, { userId: session.user.id });
+                    setPayments(result); // Almacena los pagos en el estado
+
+                    // Procesar los proyectos únicos
+                    const uniqueProjects = result.map(payment => {
+                        // Buscar la imagen con imageOrder = 1 o la primera imagen si no hay
+                        const image = payment.project.images.find(img => img.imageOrder === 1) || payment.project.images[0];
+
+                        return {
+                            id: payment.project.id,
+                            name: payment.project.name,
+                            location: payment.project.location,
+                            date: payment.project.endDate,
+                            imageUrl: image?.imageUrl || '', // Si no hay imagen, deja la URL en vacío
+                        };
+                    });
+
+                    // Eliminar proyectos duplicados basados en el `id`
+                    const uniqueProjectsSet = uniqueProjects.filter((value, index, self) =>
+                        index === self.findIndex((t) => (
+                            t.id === value.id
+                        ))
+                    );
+
+                    setProjects(uniqueProjectsSet); // Establece los proyectos únicos en el estado
+                } catch (error) {
+                    console.error("Error al obtener los pagos:", error);
+                    setPayments([]); // En caso de error, puedes establecer un array vacío
+                }
+            }
+        };
+
+        fetchData();
+    }, [accessToken, session?.user.id]); // Ejecutar solo cuando accessToken o session.user.id cambien
+
+
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
 
             {/* Header */}
             <header className="bg-moss-green text-white py-6">
                 <div className="container mx-auto px-4">
-                    <h1 className="text-3xl font-Righteous">Historial de Árboles y Pagos</h1>
-                    <p className="text-sm font-Poppins">Consulta tus adopciones y pagos realizados.</p>
+                    <h1 className="text-3xl font-Righteous">Historial de Proyectos y Donacines</h1>
+                    <p className="text-sm font-Poppins">Consulta los proyectos en los que participas y pagos realizados.</p>
                 </div>
             </header>
 
@@ -100,15 +71,15 @@ const MyDonations = () => {
 
                 {/* Adopted Trees Section */}
                 <section className="mb-8 animate-fade-in w-full">
-                    <h2 className="text-xl font-Poppins font-semibold mb-4">Árboles Adoptados Por Vos</h2>
+                    <h2 className="text-xl font-Poppins font-semibold mb-4">Proyectos seleccionados por vos</h2>
                     <div className="w-full">
-                        <AdoptedTreesCarousel trees={trees} />
+                        <AdoptedTreesCarousel projectsList={projects} />
                     </div>
                 </section>
 
                 {/* Payments History Section */}
                 <section className="animate-fade-in-delay">
-                    <h2 className="text-xl font-Poppins font-semibold mb-4">Historial de Pagos</h2>
+                    <h2 className="text-xl font-Poppins font-semibold mb-4">Historial de Donaciones</h2>
                     <PaymentsTable payments={payments} />
                 </section>
             </main>
