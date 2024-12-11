@@ -92,7 +92,7 @@ const ProjectManagement = () => {
 
         if (res.ok) {
             setIsModalOpen(false);
-            setNewProject({ id: "", name: "", description: "", location: "", endDate: "", price: "",videoUrl:"", images: [] }); // Limpiar formulario
+            setNewProject({ id: "", name: "", description: "", location: "", endDate: "", price: "", videoUrl: "", images: [] }); // Limpiar formulario
             setSelectedProject(null)
             // Recargar los proyectos después de crear uno nuevo
             const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_GATEWAY_URL}/projects/getall`);
@@ -128,7 +128,7 @@ const ProjectManagement = () => {
 
         if (res.ok) {
             setIsModalOpen(false);
-            setNewProject({ id: "", name: "", description: "", location: "", endDate: "", price: "",videoUrl:"", images: [] });
+            setNewProject({ id: "", name: "", description: "", location: "", endDate: "", price: "", videoUrl: "", images: [] });
             setSelectedProject(null); // Limpiar el proyecto seleccionado
             // Recargar los proyectos después de la actualización
             const fetchResponse = await fetch(`${process.env.NEXT_PUBLIC_GATEWAY_URL}/projects/getall`);
@@ -174,7 +174,7 @@ const ProjectManagement = () => {
 
     const openCreateModal = () => {
         setSelectedProject(null); // Limpiar el proyecto seleccionado para crear uno nuevo
-        setNewProject({ id: "", name: "", description: "", location: "", endDate: "", price: "",videoUrl:"", images: [] }); // Limpiar formulario
+        setNewProject({ id: "", name: "", description: "", location: "", endDate: "", price: "", videoUrl: "", images: [] }); // Limpiar formulario
         setIsModalOpen(true);
     };
 
@@ -310,30 +310,33 @@ const ProjectManagement = () => {
                             <td className="border px-4 py-2">{project.description}</td>
                             <td className="border px-4 py-2">
                                 {project.isFinished ? (
-                                    <span className="text-green-500 font-bold">Finalizado</span>
+                                    <span className="inline-block bg-green-200 text-green-800 text-xs font-semibold py-1 px-2 rounded-full">
+                                        Finalizado</span>
                                 ) : (
-                                    <span className="text-red-500 font-bold">En Progreso</span>
+                                    <span className="inline-block bg-yellow-200 text-yellow-800 text-xs font-semibold py-1 px-2 rounded-full">Activo</span>
                                 )}
                             </td>
                             <td className="border px-4 py-2">
-                                <button
-                                    className="bg-green-500 text-white p-2 rounded mr-2"
-                                    onClick={() => openGalleryModal(project)}
-                                >
-                                    Galería
-                                </button>
-                                <button
-                                    className="bg-yellow-500 text-white p-2 rounded mr-2"
-                                    onClick={() => handleEditProject(project)}
-                                >
-                                    Editar
-                                </button>
-                                <button
-                                    className="bg-red-500 text-white p-2 rounded"
-                                    onClick={() => handleDeleteProject(project.id)}
-                                >
-                                    Eliminar
-                                </button>
+                                <div className="flex space-x-2">
+                                    <button
+                                        className="bg-green-500 text-white text-xs py-1 px-2 rounded"
+                                        onClick={() => openGalleryModal(project)}
+                                    >
+                                        Galería
+                                    </button>
+                                    <button
+                                        className="bg-yellow-500 text-white text-xs py-1 px-2 rounded"
+                                        onClick={() => handleEditProject(project)}
+                                    >
+                                        Editar
+                                    </button>
+                                    <button
+                                        className="bg-red-500 text-white text-xs py-1 px-2 rounded"
+                                        onClick={() => handleDeleteProject(project.id)}
+                                    >
+                                        Eliminar
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     ))}
