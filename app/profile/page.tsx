@@ -2,9 +2,11 @@
 
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const [formData, setFormData] = useState({
     id: "",
     userName: "",
@@ -45,16 +47,20 @@ export default function ProfilePage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Error details:", errorData);
         throw new Error(errorData.message || "Error al actualizar los datos");
       }
 
       const updatedData = await response.json();
 
+      // Actualizar el formulario y emitir un evento global
       setFormData((prev) => ({
         ...prev,
         ...updatedData,
       }));
+
+      // Emitir un evento personalizado para actualizar otros componentes
+      const event = new CustomEvent("profileUpdated", { detail: updatedData });
+      window.dispatchEvent(event);
 
       setShowSuccessAlert(true);
       setTimeout(() => setShowSuccessAlert(false), 3000);
@@ -122,6 +128,7 @@ export default function ProfilePage() {
             value={formData.userName}
             onChange={handleChange}
             className="w-full p-2 mt-1 border rounded-md"
+            disabled
           />
         </div>
         <div className="mb-4">
@@ -161,6 +168,7 @@ export default function ProfilePage() {
             value={formData.email}
             onChange={handleChange}
             className="w-full p-2 mt-1 border rounded-md"
+            disabled
           />
         </div>
         {/* <div className="mb-4">
@@ -171,7 +179,7 @@ export default function ProfilePage() {
             type="text"
             id="address"
             name="address"
-            value={formData.address}
+            value={formData.address || ''}
             onChange={handleChange}
             className="w-full p-2 mt-1 border rounded-md"
           />
