@@ -58,7 +58,7 @@ export default function Logout() {
 
   const handleLogout = async () => {
     await federatedLogout();
-    router.push("/login");
+    router.push("/");
   };
 
 
