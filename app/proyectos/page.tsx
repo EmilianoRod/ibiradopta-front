@@ -91,9 +91,9 @@ const Projects: React.FC = () => {
             (index + projects.length - currentIndex) % projects.length === 2;
 
           const zIndex = isMainVideo
-            ? 20
-            : isNextVideo
             ? 40
+            : isNextVideo
+            ? 50
             : isSecondNextVideo
             ? 60
             : 20;
@@ -127,6 +127,7 @@ const Projects: React.FC = () => {
               {isMainVideo && (
                 <div
                 className="absolute top-1/2 left-[5%] md:left-[10%] w-[80%] md:w-[300px] text-left text-gray-200 transform -translate-y-1/2 font-sans bg-black bg-opacity-50 p-2 rounded-lg"
+                
               >
                 <div className="text-xl sm:text-2xl md:text-4xl uppercase font-bold">
                   {project.name}
