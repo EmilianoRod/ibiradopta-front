@@ -7,6 +7,7 @@ import "./globals.css";
 import type { Metadata } from "next"; 
 
 
+
 export const metadata: Metadata = {
   title: "Dream Tree",
   description: "Bienvenido a Dream Tree - Explora nuestras características y servicios",
@@ -25,7 +26,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
               <main className="flex-grow">
                 {children}
               </main>
-              <Footer/>
+              <Footer/> 
             </div>
           </SessionGuard>
         </Providers>

@@ -34,7 +34,7 @@ const Nav = () => {
               <Link href="/" className="text-moss-green block px-4 py-2 text-lg lg:text-2xl hover:text-green-700">Home</Link>
             </li>
             <li>
-              <Link href="#" className="text-moss-green block px-4 py-2 text-lg lg:text-2xl hover:text-green-700">Explorar</Link>
+              <Link href="/explorar" className="text-moss-green block px-4 py-2 text-lg lg:text-2xl hover:text-green-700">Explorar</Link>
             </li>
 
             {session ? (

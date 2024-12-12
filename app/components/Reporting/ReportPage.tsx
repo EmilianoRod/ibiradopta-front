@@ -8,6 +8,7 @@ import ReportTable from "./ReportTable";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import Papa from "papaparse";
+import { useMemo } from "react";
 
 interface User {
     id: string;
@@ -226,14 +227,22 @@ const ReportPage: React.FC = () => {
     //     filteredData.filter((d) => d.date === date).reduce((sum, d) => sum + d.amount, 0)
     // );
 
+    const uniqueProjects = useMemo(() => {
+        return [...new Set(allData.map(d => d.project.id))].map(projectId => {
+            const projectData = allData.find(d => d.project.id === projectId);
+            return projectData ? projectData.project : null;
+        });
+    }, [allData]);
+
 
 
     return (
+
         <div>
-            <h1 className="text-2xl pl-10 pt-5 font-Poppins font-bold">Informe de Actividades</h1>
+            <h1 className="text-2xl pl-10 pt-5 font-Poppins font-bold text-yellow-500">Informe de Actividades</h1>
 
             {/* Filtros */}
-            <div className="mb-4 space-y-2">
+            <div className="mb-4 space-y-2 space-x-2 mx-2">
                 <input
                     type="date"
                     name="startDate"
@@ -257,14 +266,19 @@ const ReportPage: React.FC = () => {
                     className="border border-gray-300 px-4 py-2 rounded-md"
                 >
                     <option value="">Seleccionar Proyecto</option>
-                    {[...new Set(filteredData
+                    {uniqueProjects.map(project => project && (
+                        <option key={project.id} value={project.id}>
+                            {project.name}
+                        </option>
+                    ))}
+                    {/* {[...new Set(filteredData
                         .map((d) => d.project))]
                         .filter((value, index, self) => self.findIndex((p) => p.id === value.id) === index) // Elimina duplicados
                         .map((project) => (
                             <option key={project.id} value={project.id}>
                                 {project.name}
                             </option>
-                        ))}
+                        ))} */}
                 </select>
                 <input
                     type="text"
@@ -325,3 +339,5 @@ const ReportPage: React.FC = () => {
 };
 
 export default ReportPage;
+
+

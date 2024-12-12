@@ -8,7 +8,7 @@ interface Project {
   id: number;
   name: string;
   description: string;
-  videoUrl: string;
+  imageUrl: string;
   location: string;
   price: number;
   isFinished: number;
@@ -117,7 +117,7 @@ const Projects: React.FC = () => {
                 className={`w-full h-full object-cover ${
                   isMainVideo ? "rounded-none" : "rounded-lg"
                 }`}
-                src={project.videoUrl}
+                src={project.imageUrl}
                 ref={(el) => (videoRefs.current[index] = el!)}
                 loop
                 muted={!isMainVideo}
