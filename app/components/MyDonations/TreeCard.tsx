@@ -2,7 +2,7 @@
 "use client";
 
 import Image from 'next/image';
-import Link from 'next/link';
+// import Link from 'next/link';
 import React from 'react';
 
 interface TreeCardProps {
@@ -13,7 +13,7 @@ interface TreeCardProps {
     location: string;
 }
 
-const TreeCard: React.FC<TreeCardProps> = ({ id, imageSrc, title, endDate, location }) => {
+const TreeCard: React.FC<TreeCardProps> = ({ imageSrc, title, endDate, location }) => {
     // Convertir endDate a un objeto Date para comparación
     const endDateObj = new Date(endDate);
     const today = new Date();
@@ -24,7 +24,7 @@ const TreeCard: React.FC<TreeCardProps> = ({ id, imageSrc, title, endDate, locat
     // Determinar el texto que se mostrará dependiendo de la fecha
     const fechaTexto = isPast ? 'Finalizó el' : 'Finaliza el';
     return (
-        <div className="bg-primary-100 rounded-lg shadow-lg p-6 max-w-md mx-auto">
+        <div className="bg-gray-200 rounded-lg shadow-lg p-6 max-w-md mx-auto">
             <div className="relative h-64 w-full mb-3">
                 <Image
                     src={imageSrc}
@@ -34,7 +34,7 @@ const TreeCard: React.FC<TreeCardProps> = ({ id, imageSrc, title, endDate, locat
                     priority
                 />
             </div>
-            <h3 className="text-xl font-Righteous font-bold text-primary-900 mb-2">
+            <h3 className="text-xl font-Righteous font-bold text-moss-green mb-2">
                 {title}
             </h3>
             <p className="text-base text-gray-600 dark:text-gray-300 mb-1">
@@ -43,12 +43,12 @@ const TreeCard: React.FC<TreeCardProps> = ({ id, imageSrc, title, endDate, locat
             <p className="text-base text-gray-600 dark:text-gray-300 mb-4">
                 Ubicación: {location}
             </p>
-            <Link
+            {/* <Link
                 href={`/trees/${id}`}
                 className="mt-4 bg-primary-500 text-primary-50 py-3 px-5 rounded hover:bg-primary-600 block text-center"
             >
                 Ver más detalles
-            </Link>
+            </Link> */}
         </div>
     );
 };

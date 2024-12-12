@@ -60,7 +60,7 @@ const PaymentsTable: React.FC<PaymentsTableProps> = ({ payments }) => {
                                 <button
                                     onClick={() => generatePDF(payment)}
                                     //disabled={payment.status !== "Completado"}
-                                    className={`py-1 px-3 rounded bg-primary-500 text-white hover:bg-primary-600`
+                                    className={`py-1 px-3 rounded bg-gray-200 text-moss-green font-bold hover:bg-moss-green hover:text-white`
 
                                     }
                                 >

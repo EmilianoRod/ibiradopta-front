@@ -61,7 +61,7 @@ const MyDonations = () => {
             {/* Header */}
             <header className="bg-moss-green text-white py-6">
                 <div className="container mx-auto px-4">
-                    <h1 className="text-3xl font-Righteous">Historial de Proyectos y Donacines</h1>
+                    <h1 className="text-3xl font-Righteous">Historial de Proyectos y Donaciones</h1>
                     <p className="text-sm font-Poppins">Consulta los proyectos en los que participas y pagos realizados.</p>
                 </div>
             </header>

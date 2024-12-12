@@ -1,3 +1,8 @@
+:root {
+    --swiper-navigation-color: red;
+    --swiper-pagination-color: red;
+}
+
 /* Mover puntos de paginación */
 .swiper-pagination {
     margin-top: 20px; /* Ajusta según sea necesario */
@@ -13,6 +18,7 @@
 
 .swiper-button-next {
     right: 30px; /* Mueve la flecha derecha */
+    
 }
 
 .swiper-button-prev {
