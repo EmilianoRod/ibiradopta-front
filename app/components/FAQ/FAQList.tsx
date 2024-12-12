@@ -27,7 +27,7 @@ const faqs = [
   ];
 
 export default function FAQList() {
-    const [focusedIndex, setFocusedIndex] = useState(0);
+    const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
 
     const handleFocus = (index: React.SetStateAction<number>) => {
         setFocusedIndex(index);
@@ -43,9 +43,9 @@ export default function FAQList() {
      */
     const handleKeyDown = (event: { key: string; }) => {
         if (event.key === 'ArrowDown') {
-            setFocusedIndex((prevIndex) => (prevIndex + 1) % faqs.length);
+            setFocusedIndex((prevIndex) => (prevIndex !== null ? (prevIndex + 1) % faqs.length : 0));
         } else if (event.key === 'ArrowUp') {
-            setFocusedIndex((prevIndex) => (prevIndex - 1 + faqs.length) % faqs.length);
+            setFocusedIndex((prevIndex) => (prevIndex !== null ? (prevIndex - 1 + faqs.length) % faqs.length : faqs.length - 1));
         }
     };
 

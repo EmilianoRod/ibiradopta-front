@@ -74,7 +74,7 @@ function PlantingLocations() {
   // );
 
   return (
-    <section className="min-h-full p-6 lg:p-10 font-Poppins">
+    <section id="PlantingLocations" className="min-h-full p-6 lg:p-10 font-Poppins">
       <h1 className="text-moss-green text-center text-3xl lg:text-4xl font-bold pb-10">
         ¿Dónde plantamos nuestros árboles?
       </h1>

@@ -35,6 +35,7 @@ const ProjectManagement = () => {
     const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);  // Estado para el modal de la galería
     const [projectImages, setProjectImages] = useState<string[]>([]);  // Estado para las imágenes del proyecto
     const [selectedImage, setSelectedImage] = useState<string | null>(null);  // Imagen seleccionada como principal
+    const [tooltipProjectId, setTooltipProjectId] = useState<number | null>(null); // Estado para almacenar el id del proyecto en foco
 
 
     // Cargar los proyectos al montar el componente
@@ -280,6 +281,14 @@ const ProjectManagement = () => {
         setProjectImages([]);  // Limpiar las imágenes al cerrar el modal
     };
 
+    const handleMouseEnter = (projectId: number) => {
+        setTooltipProjectId(projectId); // Almacena el id del proyecto sobre el que pasa el mouse
+    };
+
+    const handleMouseLeave = () => {
+        setTooltipProjectId(null); // Resetea el id al salir del área
+    };
+
 
 
     return (
@@ -308,12 +317,26 @@ const ProjectManagement = () => {
                         <tr key={project.id} className="hover:bg-yellow-50">
                             <td className="border px-4 py-2">{project.name}</td>
                             <td className="border px-4 py-2">{project.description}</td>
-                            <td className="border px-4 py-2 text-center">
+                            <td
+                                className="border px-4 py-2 text-center relative"
+                                onMouseEnter={() => handleMouseEnter(project.id)} // Establece el proyecto en foco
+                                onMouseLeave={handleMouseLeave} // Resetea el proyecto al salir
+                            >
                                 {project.isFinished ? (
                                     <span className="inline-block bg-green-200 text-green-800 text-xs font-semibold py-1 px-2 rounded-full">
-                                        Finalizado</span>
+                                        Finalizado
+                                    </span>
                                 ) : (
-                                    <span className="inline-block bg-yellow-200 text-yellow-800 text-xs font-semibold py-1 px-2 rounded-full">Activo</span>
+                                    <span className="inline-block bg-yellow-200 text-yellow-800 text-xs font-semibold py-1 px-2 rounded-full">
+                                        Activo
+                                    </span>
+                                )}
+
+                                {/* Tooltip con la fecha de finalización solo para el proyecto en foco */}
+                                {tooltipProjectId === project.id && project.endDate && (
+                                    <div className="absolute bottom-0 -left-1/2 transform -translate-x-1/2 opacity-70 bg-gray-800 text-white text-xs py-1 px-2 rounded mt-2 shadow-black shadow-md">
+                                        {`Finalización: ${project.endDate}`}
+                                    </div>
                                 )}
                             </td>
                             <td className="border px-4 py-2">
@@ -412,18 +435,18 @@ const ProjectManagement = () => {
                             />
                         )}
                         <div className="flex flex-row place-content-evenly">
-                        <button
-                            className=" bg-green-600 text-white p-2 rounded mt-2 hover:bg-green-700 shadow-black shadow-lg"
-                            onClick={selectedProject ? handleUpdateProject : handleCreateProject} // Condicional: si hay un proyecto seleccionado, actualizar, si no, crear
-                        >
-                            {selectedProject ? "Actualizar Proyecto" : "Crear Proyecto"}
-                        </button>
-                        <button
-                            className="bg-gray-500 text-white p-2 rounded mt-2 hover:bg-gray-600 shadow-black shadow-lg"
-                            onClick={() => setIsModalOpen(false)}
-                        >
-                            Cerrar
-                        </button>
+                            <button
+                                className=" bg-green-600 text-white p-2 rounded mt-2 hover:bg-green-700 shadow-black shadow-lg"
+                                onClick={selectedProject ? handleUpdateProject : handleCreateProject} // Condicional: si hay un proyecto seleccionado, actualizar, si no, crear
+                            >
+                                {selectedProject ? "Actualizar Proyecto" : "Crear Proyecto"}
+                            </button>
+                            <button
+                                className="bg-gray-500 text-white p-2 rounded mt-2 hover:bg-gray-600 shadow-black shadow-lg"
+                                onClick={() => setIsModalOpen(false)}
+                            >
+                                Cerrar
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -492,12 +515,12 @@ const ProjectManagement = () => {
                             className="border p-2 w-full mt-4 rounded"
                         />
                         <div className="flex flex-row place-content-end">
-                        <button
-                            className="bg-gray-500 text-white p-2 rounded mt-2 hover:bg-gray-600"
-                            onClick={() => handleCloseGalleryModal()}
-                        >
-                            Cerrar
-                        </button>
+                            <button
+                                className="bg-gray-500 text-white p-2 rounded mt-2 hover:bg-gray-600"
+                                onClick={() => handleCloseGalleryModal()}
+                            >
+                                Cerrar
+                            </button>
                         </div>
                     </div>
                 </div>

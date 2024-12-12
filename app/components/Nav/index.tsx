@@ -18,8 +18,12 @@ const Nav = () => {
     <nav className="bg-white p-4">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center">
+          <Link href="/">
+          <div className="flex items-center">
           <Image src="/logo.svg" alt="logo" width={108} height={96} />
           <div className="text-moss-green text-2xl lg:text-5xl font-Righteous pt-2 lg:pt-8">IBIRADOPTÁ</div>
+          </div>
+          </Link>
         </div>
         <div className="block lg:hidden">
           <button onClick={() => setIsOpen(!isOpen)} className="text-moss-green focus:outline-none">
@@ -31,10 +35,10 @@ const Nav = () => {
         <div className={`lg:flex ${isOpen ? 'block' : 'hidden'} w-full lg:w-auto`}>
           <ul className="flex flex-col lg:flex-row lg:space-x-10 space-y-2 lg:space-y-0 font-Poppins text-center lg:text-left">
             <li>
-              <Link href="/" className="text-moss-green block px-4 py-2 text-lg lg:text-2xl hover:text-green-700">Home</Link>
+              <Link href="/" className="text-moss-green block px-4 py-2 text-lg lg:text-2xl hover:text-green-700 text-shadow transition-all duration-200 transform hover:scale-105">Home</Link>
             </li>
             <li>
-              <Link href="/explorar" className="text-moss-green block px-4 py-2 text-lg lg:text-2xl hover:text-green-700">Explorar</Link>
+              <Link href="/explorar" className="text-moss-green block px-4 py-2 text-lg lg:text-2xl hover:text-green-700 text-shadow transition-all duration-200 transform hover:scale-105">Explorar</Link>
             </li>
 
             {session ? (
