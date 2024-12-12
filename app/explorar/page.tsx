@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { useSession, signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Image from 'next/image';
 import Link from "next/link";
 import { Modal } from "../components/exploreModal";
@@ -67,6 +67,13 @@ const FinishedProjects: React.FC = () => {
         });
     }, [currentIndex]);
 
+    // Asegurarse de que el primer video se reproduce al cargar
+    useEffect(() => {
+        if (projects.length > 0 && videoRefs.current[currentIndex]) {
+            videoRefs.current[currentIndex].play(); // Reproducir el primer video si no lo está haciendo
+        }
+    }, [projects]);
+
     const handleNext = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % projects.length);
         setGalleryIndex(0);
@@ -77,18 +84,6 @@ const FinishedProjects: React.FC = () => {
             prevIndex === 0 ? projects.length - 1 : prevIndex - 1
         );
         setGalleryIndex(0);
-    };
-
-    const handleApoyarClick = () => {
-        const selectedProjectId = projects[currentIndex]?.id;
-
-        if (!session) {
-            signIn("keycloak", {
-                callbackUrl: `/pago?proyecto=${encodeURIComponent(selectedProjectId)}`,
-            });
-        } else {
-            router.push(`/pago?proyecto=${encodeURIComponent(selectedProjectId)}`);
-        }
     };
 
     const handleVerMasClick = () => {
@@ -122,10 +117,10 @@ const FinishedProjects: React.FC = () => {
                         return (
                             <div
                                 key={project.id}
-                                className={`absolute w-[200px] h-[300px] top-1/2 transform -translate-y-1/2 rounded-2xl shadow-[0_30px_50px_rgba(80,80,80,1)] transition-all duration-500 ${currentIndex === index
-                                    ? "left-0 w-full h-full rounded-none"
+                                className={`absolute w-[200px] h-[300px] top-1/2 transform -translate-y-1/2 rounded-2xl shadow-[0_10px_20px] transition-all duration-500 ${currentIndex === index
+                                    ? "left-0 w-full h-full rounded-lg"
                                     : currentIndex === (index + 1) % projects.length
-                                        ? "left-2/3"
+                                        ? "left-2/3 "
                                         : currentIndex === (index + 2) % projects.length
                                             ? "left-[calc(50%+440px)]"
                                             : "left-[calc(50%+440px)] opacity-0"
@@ -143,7 +138,7 @@ const FinishedProjects: React.FC = () => {
 
                                 {/* Contenido */}
                                 {currentIndex === index && (
-                                    <div className="absolute top-1/2 left-[100px] w-[300px] text-left text-gray-200 transform -translate-y-1/2 font-sans">
+                                    <div className="absolute top-1/2 left-[100px] w-[300px] text-left text-gray-200 transform -translate-y-1/2 font-sans font-sans bg-black shadow-black shadow-[0_5px_10px] bg-opacity-50 p-2 rounded-lg">
                                         <div className="text-4xl uppercase font-bold">
                                             {project.name}
                                         </div>
@@ -151,7 +146,7 @@ const FinishedProjects: React.FC = () => {
                                         <div className="mt-2 text-sm">Ubicación: {project.location}</div>
 
                                         <button
-                                            className="mt-4 px-5 py-2 bg-gray-700 text-white rounded-md cursor-pointer"
+                                            className="mt-4 px-5 py-2 bg-gray-700 text-white rounded-md shadow-black shadow-[0_5px_10px] cursor-pointer hover:bg-gray-600"
                                             onClick={handleVerMasClick}
                                         // images: { imageUrl: string; imageOrder: number }[]; // Lista de imágenes
                                         >
@@ -171,14 +166,14 @@ const FinishedProjects: React.FC = () => {
                         style={{ zIndex: 60 }} // Asegura que los botones estén delante de los videos
                     >
                         <button
-                            className="bg-gray-700 text-white p-2 rounded-full hover:bg-gray-600"
+                            className="bg-gray-700 text-white p-2 rounded-full shadow-black shadow-[0_2px_5px] hover:bg-gray-600"
                             onClick={handlePrev}
                             aria-label="Previous project"
                         >
                             <ChevronLeft size={24} />
                         </button>
                         <button
-                            className="bg-gray-700 text-white p-2 rounded-full hover:bg-gray-600"
+                            className="bg-gray-700 text-white p-2 rounded-full shadow-black shadow-[0_2px_5px] hover:bg-gray-600"
                             onClick={handleNext}
                             aria-label="Next project"
                         >
@@ -187,9 +182,9 @@ const FinishedProjects: React.FC = () => {
                     </div>
                 )}
 
-</div>
+            </div>
 
-                 {/* Modal for expanded details */}
+            {/* Modal for expanded details */}
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <div className="p-6">
                     <h1 className="text-4xl font-bold text-moss-green mb-4">

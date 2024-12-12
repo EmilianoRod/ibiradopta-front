@@ -126,65 +126,66 @@ function ApoyarCard() {
 
   return (
     <div
-      className="flex justify-center items-center min-h-screen bg-gray-100 py-12 px-4"
-      style={{ backgroundImage: "url('/fondo-hojas.png')" }}
-    >
-      <div className="bg-gray-800 text-white p-8 rounded-lg shadow-lg max-w-lg w-full">
-        <h2 className="text-xl font-bold text-center mb-6">{project.name}</h2>
-        <p className="text-sm mb-4">{project.description}</p>
-        <img
-          src={selectedImage}
-          alt={project.name}
-          className="w-full h-40 object-cover mb-4 rounded-md"
-        />
-        <p className="mb-2">
-          <strong>Ubicación:</strong> {project.location}
-        </p>
-        <p className="mb-4">
-          <strong>Precio por árbol:</strong> ${project.price}
-        </p>
+  className="flex justify-center items-center max-h-screen bg-gradient-to-r from-green-100 via-white to-green-100 py-12 px-4"
+  style={{ backgroundImage: "url('/fondo-hojas.png')" }}
+>
+  <div className="bg-gray-800 text-white p-8 rounded-lg shadow-black shadow-2xl max-w-lg">
+    <h2 className="text-xl font-bold text-center mb-6">{project.name}</h2>
+    <p className="text-base mb-4">{project.description}</p>
+    <img
+      src={selectedImage}
+      alt={project.name}
+      className="w-full h-40 object-cover mb-4 rounded-lg shadow-md"
+    />
+    <p className="mb-2">
+      <strong>Ubicación:</strong> {project.location}
+    </p>
+    <p className="mb-4">
+      <strong>Precio por árbol:</strong> ${project.price}
+    </p>
 
-        {/* Selector de cantidad */}
-        <div className="mb-6">
-          <p className="mb-2">Seleccione cantidad de árboles a adoptar</p>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => handleCantidadChange("decrement")}
-              className="px-3 py-2 bg-gray-700 rounded-md"
-            >
-              -
-            </button>
-            <span className="text-xl">{cantidad}</span>
-            <button
-              onClick={() => handleCantidadChange("increment")}
-              className="px-3 py-2 bg-gray-700 rounded-md"
-            >
-              +
-            </button>
-          </div>
-        </div>
-
-        {/* Muestra el total */}
-        <p className="mb-6">
-          <strong>Total:</strong> ${total}
-        </p>
-
-        {/* Botón para ir a pagar */}
+    {/* Selector de cantidad */}
+    <div className="mb-6 space-y-4">
+      <p className="text-sm">Seleccione cantidad de árboles a adoptar</p>
+      <div className="flex items-center justify-center gap-6">
         <button
-          className="w-full px-6 py-3 bg-green-600 text-white rounded-full hover:bg-green-700"
-          onClick={handleRedireccion}
+          onClick={() => handleCantidadChange("decrement")}
+          className="px-4 py-2 bg-gray-600 rounded-lg hover:bg-gray-700 transition-all duration-300 transform hover:scale-105"
         >
-          Ir a Pagar
+          -
         </button>
-        {/* Botón Volver */}
+        <span className="text-xl">{cantidad}</span>
         <button
-          className="w-full px-6 py-3 bg-gray-600 text-white rounded-full mt-4 hover:bg-gray-700"
-          onClick={() => router.back()}
+          onClick={() => handleCantidadChange("increment")}
+          className="px-4 py-2 bg-gray-600 rounded-lg hover:bg-gray-700 transition-all duration-300 transform hover:scale-105"
         >
-          Volver
+          +
         </button>
       </div>
     </div>
+
+    {/* Muestra el total */}
+    <p className="mb-6">
+      <strong>Total:</strong> ${total}
+    </p>
+
+    {/* Botón para ir a pagar */}
+    <button
+      className="w-full px-6 py-3 bg-green-600 text-white rounded-full hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 transition duration-200"
+      onClick={handleRedireccion}
+    >
+      Ir a Pagar
+    </button>
+
+    {/* Botón Volver */}
+    <button
+      className="w-full px-6 py-3 bg-gray-600 text-white rounded-full mt-4 hover:bg-gray-700 transition duration-200"
+      onClick={() => router.back()}
+    >
+      Volver
+    </button>
+  </div>
+</div>
   );
 }
 

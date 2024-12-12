@@ -57,6 +57,13 @@ const Projects: React.FC = () => {
     });
   }, [currentIndex]);
 
+      // Asegurarse de que el primer video se reproduce al cargar
+      useEffect(() => {
+        if (projects.length > 0 && videoRefs.current[currentIndex]) {
+          videoRefs.current[currentIndex].play(); // Reproducir el primer video si no lo está haciendo
+        }
+      }, [projects]);
+
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % projects.length);
   };
@@ -107,16 +114,14 @@ const Projects: React.FC = () => {
                   : isNextVideo
                   ? "left-2/3 w-[200px] h-[300px]"
                   : isSecondNextVideo
-                  ? "left-[calc(50%+440px)] w-[200px] h-[300px]"
+                  ? "left-[calc(50%+470px)] w-[200px] h-[300px]"
                   : "opacity-0"
               }`}
               style={{ zIndex }}
             >
               {/* Video */}
               <video
-                className={`w-full h-full object-cover ${
-                  isMainVideo ? "rounded-none" : "rounded-lg"
-                }`}
+                className={`w-full h-full shadow-[0_10px_20px] object-cover rounded-lg`}
                 src={project.imageUrl}
                 ref={(el) => (videoRefs.current[index] = el!)}
                 loop
@@ -126,8 +131,7 @@ const Projects: React.FC = () => {
               {/* Contenido */}
               {isMainVideo && (
                 <div
-                className="absolute top-1/2 left-[5%] md:left-[10%] w-[80%] md:w-[300px] text-left text-gray-200 transform -translate-y-1/2 font-sans bg-black bg-opacity-50 p-2 rounded-lg"
-                
+                className="absolute top-1/2 left-[5%] md:left-[10%] w-[80%] md:w-[300px] text-left text-gray-200 shadow-black shadow-[0_5px_10px] transform -translate-y-1/2 font-sans bg-black bg-opacity-50 p-2 rounded-lg"
               >
                 <div className="text-xl sm:text-2xl md:text-4xl uppercase font-bold">
                   {project.name}
@@ -162,13 +166,13 @@ const Projects: React.FC = () => {
           style={{ zIndex: 100 }}
         >
           <button
-            className="bg-gray-700 text-white px-3 sm:px-4 py-1 sm:py-2 rounded hover:bg-gray-600"
+            className="bg-gray-700 text-white px-3 sm:px-4 py-1 sm:py-2 rounded shadow-black shadow-[0_5px_10px] hover:bg-gray-600"
             onClick={handlePrev}
           >
             Anterior
           </button>
           <button
-            className="bg-gray-700 text-white px-3 sm:px-4 py-1 sm:py-2 rounded hover:bg-gray-600"
+            className="bg-gray-700 text-white px-3 sm:px-4 py-1 sm:py-2 shadow-black shadow-[0_5px_10px] rounded hover:bg-gray-600"
             onClick={handleNext}
           >
             Siguiente

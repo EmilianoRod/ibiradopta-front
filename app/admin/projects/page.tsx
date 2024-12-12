@@ -285,19 +285,19 @@ const ProjectManagement = () => {
     return (
         <div className="container mx-auto p-4">
 
-            <h1 className="text-xl font-bold">Administración de Proyectos</h1>
+            <h1 className="text-2xl  pt-5 font-Poppins font-bold text-yellow-500">Administración de Proyectos</h1>
 
             <button
-                className="bg-blue-500 text-white p-2 rounded mt-4"
+                className="reportButtons mt-4"
                 onClick={openCreateModal}
             >
                 Crear Proyecto
             </button>
 
-            <table className="min-w-full mt-6 table-auto">
+            <table className="min-w-full mt-6 table-auto border-collapse">
                 <thead>
-                    <tr className="bg-gray-100">
-                        <th className="px-4 py-2">Nombre</th>
+                    <tr className="bg-yellow-500">
+                        <th className="px-4 py-2 ">Nombre</th>
                         <th className="px-4 py-2">Descripción</th>
                         <th className="px-4 py-2">Estado</th>
                         <th className="px-4 py-2">Acciones</th>
@@ -305,10 +305,10 @@ const ProjectManagement = () => {
                 </thead>
                 <tbody>
                     {projects.map((project) => (
-                        <tr key={project.id}>
+                        <tr key={project.id} className="hover:bg-yellow-50">
                             <td className="border px-4 py-2">{project.name}</td>
                             <td className="border px-4 py-2">{project.description}</td>
-                            <td className="border px-4 py-2">
+                            <td className="border px-4 py-2 text-center">
                                 {project.isFinished ? (
                                     <span className="inline-block bg-green-200 text-green-800 text-xs font-semibold py-1 px-2 rounded-full">
                                         Finalizado</span>
@@ -319,19 +319,19 @@ const ProjectManagement = () => {
                             <td className="border px-4 py-2">
                                 <div className="flex space-x-2">
                                     <button
-                                        className="bg-green-500 text-white text-xs py-1 px-2 rounded"
+                                        className="bg-green-500 text-white text-xs py-1 px-2 rounded hover:bg-green-600"
                                         onClick={() => openGalleryModal(project)}
                                     >
                                         Galería
                                     </button>
                                     <button
-                                        className="bg-yellow-500 text-white text-xs py-1 px-2 rounded"
+                                        className="bg-yellow-500 text-white text-xs py-1 px-2 rounded hover:bg-yellow-600"
                                         onClick={() => handleEditProject(project)}
                                     >
                                         Editar
                                     </button>
                                     <button
-                                        className="bg-red-500 text-white text-xs py-1 px-2 rounded"
+                                        className="bg-red-500 text-white text-xs py-1 px-2 rounded hover:bg-red-600"
                                         onClick={() => handleDeleteProject(project.id)}
                                     >
                                         Eliminar
@@ -346,7 +346,7 @@ const ProjectManagement = () => {
             {/* Modal de Creación/Edición de Proyecto */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-white p-4 rounded-md w-96">
+                    <div className="bg-yellow-500 p-4 rounded-md w-96 shadow-black shadow-2xl">
                         <h2 className="text-xl font-bold mb-4">
                             {selectedProject ? "Editar Proyecto" : "Crear Proyecto"}
                         </h2>
@@ -411,30 +411,32 @@ const ProjectManagement = () => {
                                 className="border p-2 w-full mb-4"
                             />
                         )}
+                        <div className="flex flex-row place-content-evenly">
                         <button
-                            className="bg-blue-500 text-white p-2 rounded"
+                            className=" bg-green-600 text-white p-2 rounded mt-2 hover:bg-green-700 shadow-black shadow-lg"
                             onClick={selectedProject ? handleUpdateProject : handleCreateProject} // Condicional: si hay un proyecto seleccionado, actualizar, si no, crear
                         >
                             {selectedProject ? "Actualizar Proyecto" : "Crear Proyecto"}
                         </button>
                         <button
-                            className="bg-gray-500 text-white p-2 rounded mt-2"
+                            className="bg-gray-500 text-white p-2 rounded mt-2 hover:bg-gray-600 shadow-black shadow-lg"
                             onClick={() => setIsModalOpen(false)}
                         >
                             Cerrar
                         </button>
+                        </div>
                     </div>
                 </div>
             )}
 
             {isGalleryModalOpen && (
                 <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-white p-4 rounded-md w-96">
+                    <div className="bg-yellow-500 p-4 rounded-md w-96 shadow-black shadow-2xl">
                         <h2 className="text-xl font-bold mb-4">Galería de Imágenes</h2>
                         <div className="grid grid-cols-3 gap-2">
                             {projectImages.map((imageUrl, index) => (
                                 <div key={index} className="relative">
-                                    <img src={imageUrl} alt={`image-${index}`} className="w-full h-32 object-cover mb-2 rounded-lg" />
+                                    <img src={imageUrl} alt={`image-${index}`} className="w-full h-32 object-cover mb-2 rounded-lg shadow-md shadow-black" />
                                     <div className="absolute top-2 right-2 flex gap-2">
                                         {/* Estrella para imagen principal */}
                                         <button
@@ -459,7 +461,7 @@ const ProjectManagement = () => {
                                         <div className="flex items-center justify-center mb-4">
                                             {/* Puedes usar una animación de "loader" aquí */}
                                             <svg
-                                                className="animate-spin h-12 w-12 text-blue-500"
+                                                className="animate-spin h-12 w-12 text-yellow-500"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 fill="none"
                                                 viewBox="0 0 24 24"
@@ -489,12 +491,14 @@ const ProjectManagement = () => {
                             disabled={isUploading}
                             className="border p-2 w-full mt-4 rounded"
                         />
+                        <div className="flex flex-row place-content-end">
                         <button
-                            className="bg-blue-500 text-white p-2 rounded mt-4"
+                            className="bg-gray-500 text-white p-2 rounded mt-2 hover:bg-gray-600"
                             onClick={() => handleCloseGalleryModal()}
                         >
                             Cerrar
                         </button>
+                        </div>
                     </div>
                 </div>
             )}
