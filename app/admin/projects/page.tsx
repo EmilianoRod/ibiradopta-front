@@ -36,6 +36,7 @@ const ProjectManagement = () => {
     const [projectImages, setProjectImages] = useState<string[]>([]);  // Estado para las imágenes del proyecto
     const [selectedImage, setSelectedImage] = useState<string | null>(null);  // Imagen seleccionada como principal
     const [tooltipProjectId, setTooltipProjectId] = useState<number | null>(null); // Estado para almacenar el id del proyecto en foco
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
 
     // Cargar los proyectos al montar el componente
@@ -289,6 +290,31 @@ const ProjectManagement = () => {
         setTooltipProjectId(null); // Resetea el id al salir del área
     };
 
+    const handleSort = (key) => {
+        let direction = 'asc';
+        if (sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
+    };
+
+    const sortedProjects = [...projects].sort((a, b) => {
+        const normalizeText = (text) => text ? text.toLowerCase().trim() : ''; // Normaliza texto
+
+        // Obtén el valor que se va a comparar (normalizado si es texto)
+        const aValue = typeof a[sortConfig.key] === 'string' ? normalizeText(a[sortConfig.key]) : a[sortConfig.key];
+        const bValue = typeof b[sortConfig.key] === 'string' ? normalizeText(b[sortConfig.key]) : b[sortConfig.key];
+
+        if (aValue < bValue) {
+            return sortConfig.direction === 'asc' ? -1 : 1;
+        }
+        if (aValue > bValue) {
+            return sortConfig.direction === 'asc' ? 1 : -1;
+        }
+        return 0;
+    });
+
+
 
 
     return (
@@ -306,14 +332,21 @@ const ProjectManagement = () => {
             <table className="min-w-full mt-6 table-auto border-collapse">
                 <thead>
                     <tr className="bg-yellow-500">
-                        <th className="px-4 py-2 ">Nombre</th>
-                        <th className="px-4 py-2">Descripción</th>
-                        <th className="px-4 py-2">Estado</th>
-                        <th className="px-4 py-2">Acciones</th>
+                        <th className="px-4 py-2 cursor-pointer"
+                            onClick={() => handleSort('name')}
+                        >Nombre {sortConfig.key === 'name' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
+                        </th>
+                        <th className="px-4 py-2 cursor-pointer"
+                            onClick={() => handleSort('description')}
+                        >Descripción {sortConfig.key === 'description' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</th>
+                        <th className="px-4 py-2 cursor-pointer"
+                            onClick={() => handleSort('isFinished')}
+                        >Estado {sortConfig.key === 'isFinished' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</th>
+                        <th className="px-4 py-2 cursor-pointer">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {projects.map((project) => (
+                    {sortedProjects.map((project) => (
                         <tr key={project.id} className="hover:bg-yellow-50">
                             <td className="border px-4 py-2">{project.name}</td>
                             <td className="border px-4 py-2">{project.description}</td>
