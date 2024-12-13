@@ -76,7 +76,7 @@ export default function Logout() {
       <div>
       <div
         className="avatar bg-moss-green text-white rounded-full w-10 h-10 flex items-center justify-center cursor-pointer transition-all duration-200 transform hover:scale-105 hover:shadow-lg"
-        //onClick={() => setIsMenuOpen(!isMenuOpen)}
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
         onMouseEnter={handleMouseEnter} // Abrir menú al pasar el cursor sobre el avatar
 
       >

@@ -339,10 +339,16 @@ const ProjectManagement = () => {
                         <th className="px-4 py-2 cursor-pointer"
                             onClick={() => handleSort('description')}
                         >Descripción {sortConfig.key === 'description' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</th>
+                        <th className="px-4 py-2 cursor-pointer" onClick={() => handleSort('price')}>
+                        <div className="flex justify-left items-center">
+                        <span className="mr-1">Precio</span> 
+                        {sortConfig.key === 'price' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}
+                        </div>
+                        </th>
                         <th className="px-4 py-2 cursor-pointer"
                             onClick={() => handleSort('isFinished')}
                         >Estado {sortConfig.key === 'isFinished' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</th>
-                        <th className="px-4 py-2 cursor-pointer">Acciones</th>
+                        <th className="px-4 py-2">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -350,6 +356,7 @@ const ProjectManagement = () => {
                         <tr key={project.id} className="hover:bg-yellow-50">
                             <td className="border px-4 py-2">{project.name}</td>
                             <td className="border px-4 py-2">{project.description}</td>
+                            <td className="border px-4 py-2">{project.price}</td>
                             <td
                                 className="border px-4 py-2 text-center relative"
                                 onMouseEnter={() => handleMouseEnter(project.id)} // Establece el proyecto en foco
