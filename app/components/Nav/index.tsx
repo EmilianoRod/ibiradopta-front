@@ -57,7 +57,7 @@ const Nav = () => {
           </div>
           <div
             ref={menuRef}
-            className={`lg:flex ${isOpen && window.innerWidth < 1024 ? 'z-50 absolute rounded-b-lg p-5 top-full w-fit bg-white  right-0 shadow-lg overflow-y-auto' : 'hidden'} block w-full lg:w-auto`}>
+            className={`lg:flex ${isOpen && window.innerWidth < 1024 ? 'z-50 absolute rounded-b-lg p-5 top-full bg-white right-0 shadow-lg overflow-y-auto' : 'hidden'} block w-full lg:w-auto`}>
             <ul className="flex flex-col lg:flex-row lg:space-x-10 space-y-2 lg:space-y-0 font-Poppins text-center lg:text-left items-center">
               <li className="lg:flex hidden border-b-2 border-gray-300 lg:border-none w-full">
                 <Link href="/" className="text-moss-green block px-4 py-2 text-lg lg:text-2xl hover:text-green-700 text-shadow transition-all duration-200 transform hover:scale-105"
@@ -73,7 +73,7 @@ const Nav = () => {
                   Explorar
                 </Link>
               </li>
-              <li className="lg:hidden order-first "
+              <li className="lg:hidden order-first w-full"
                 onClick={handleOptionClick}
               >
                 <HamMenu />
@@ -96,20 +96,20 @@ const Nav = () => {
                   <li className="lg:flex hidden"  >
                     <RegisterButton className="bg-moss-green text-white px-6 py-2 ml-2 text-2xl w-60 h-16 rounded-full hover:bg-green-700" />
                   </li>
-                  <li className="lg:hidden"
+                  <li className="lg:hidden w-full"
                     onClick={handleOptionClick}
                   >
                     {/* Estilos para pantallas pequeñas */}
-                    <RegisterButton className="text-moss-green block px-4 py-2 text-lg border-b-2 border-gray-300" />
+                    <RegisterButton className="text-moss-green block px-4 py-2 text-lg border-b-2 border-gray-300 w-full" />
                   </li>
                   <li className="lg:flex hidden">
                     <Login className="bg-moss-green text-white px-6 py-2 text-2xl w-60 h-16 rounded-full hover:bg-green-700" />
                   </li>
-                  <li className="lg:hidden"
+                  <li className="lg:hidden w-full"
                     onClick={handleOptionClick}
                   >
                     {/* Estilos para pantallas pequeñas */}
-                    <Login className="text-moss-green block px-4 py-2 text-lg border-b-2 border-gray-300" />
+                    <Login className="text-moss-green block px-4 py-2 text-lg border-b-2 border-gray-300 w-full" />
                   </li>
                 </>
               ) : (

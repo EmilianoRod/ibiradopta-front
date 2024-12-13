@@ -54,17 +54,17 @@ const HamMenu = () => {
     return (
         <div >
             <div className="flex flex-col items-center space-x-2">
-            {session ? (
-                <div
-                    className=" avatar bg-moss-green text-white rounded-full w-10 h-10 flex items-center justify-center cursor-pointer transition-all duration-200 transform hover:scale-105 hover:shadow-lg"
-                >
-                    {initials}
-                </div>):(<></>)}
+                {session ? (
+                    <div
+                        className=" avatar bg-moss-green text-white rounded-full w-10 h-10 flex items-center justify-center cursor-pointer transition-all duration-200 transform hover:scale-105 hover:shadow-lg"
+                    >
+                        {initials}
+                    </div>) : (<></>)}
                 {/* Menú */}
-                <div>
-                    <ul>
+                <div className="w-full">
+                    <ul className="flex flex-col lg:flex-row lg:space-x-10 space-y-2 lg:space-y-0 font-Poppins text-center lg:text-left items-center">
                         {session ? (
-                            <li className="justify-center border-b-2 border-gray-300">
+                            <li className="justify-center border-b-2 border-gray-300 w-full">
                                 <button
                                     onClick={handleProfileClick}
                                     className="text-moss-green px-4 py-2 text-lg hover:text-green-700 text-shadow transition-all duration-200 transform hover:scale-105"
@@ -72,29 +72,32 @@ const HamMenu = () => {
                                     Perfil
                                 </button>
                             </li>) : (<></>)}
-                        <li className="border-b-2 border-gray-300">
-                            {isAdmin && (
+
+                        {isAdmin && (
+                            <li className="border-b-2 border-gray-300 w-full">
                                 <button
                                     onClick={handleProjectManagementClick}
                                     className="text-moss-green px-4 py-2 text-lg hover:text-green-700 text-shadow transition-all duration-200 transform hover:scale-105"
                                 >
                                     Administración de Proyectos
                                 </button>
-                            )}
-                        </li>
-                        <li className="border-b-2 border-gray-300">
-                            {isAdmin && (
+                            </li>
+                        )}
+
+                        {isAdmin && (
+                            <li className="border-b-2 border-gray-300 w-full">
                                 <button
                                     onClick={handleInformeClick}
                                     className="text-moss-green px-4 py-2 text-lg hover:text-green-700 text-shadow transition-all duration-200 transform hover:scale-105"
                                 >
                                     Informes
                                 </button>
-                            )}
-                        </li>
+                            </li>
+                        )}
+
                         {session ? (
                             <>
-                                <li className="border-b-2 border-gray-300 lg:border-none w-full "
+                                <li className="border-b-2 border-gray-300 lg:border-none w-full"
                                 // onClick={handleOptionClick}
                                 >
                                     <MyDonationsButton />
@@ -118,7 +121,7 @@ const HamMenu = () => {
                             </Link>
                         </li>
                         {session ? (
-                            <li className="border-b-2 border-gray-300">
+                            <li className="border-b-2 border-gray-300 w-full">
                                 <button
                                     onClick={handleLogout}
                                     className="text-moss-green px-4 py-2 text-lg hover:text-green-700 text-shadow transition-all duration-200 transform hover:scale-105"
