@@ -109,10 +109,10 @@ const FinishedProjects: React.FC = () => {
                     {projects.map((project, index) => {
                         const zIndex =
                             index === currentIndex
-                                ? 50 // Video actual
+                                ? 40 // Video actual
                                 : (index + projects.length - currentIndex) % projects.length === 1
-                                    ? 40 // Video siguiente
-                                    : 30; // Videos restantes
+                                    ? 30 // Video siguiente
+                                    : 20; // Videos restantes
 
                         return (
                             <div

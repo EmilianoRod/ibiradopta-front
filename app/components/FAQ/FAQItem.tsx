@@ -14,7 +14,7 @@ export default function FAQItem({ question, answer, isFocused, onFocus, onToggle
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleOpen = () => {
-        setIsOpen(!isOpen);
+        setIsOpen(!isOpen)
         onToggle();
     };
 
